@@ -3,41 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// public enum StateType
-//{
-//    introduction,
-//    eyeCalibration,
-//    handLengthCalibration,
-//    wandPointCalibration,
-//    training,
-//    toStart,
-//    toEnd,
-//    pause,
-//    complete
-// };
-
-
-public enum Transferfunction
-{
-        open,
-        closed,
-        visuoHaptic
-};
-
-
-public struct Translation
-{
-    public Vector3 from;
-    public Vector3 to;
-}
-
-public struct Trial
-{
-    public Translation translation;
-    public Transferfunction transferFunction;
-}
-
-
 
 public static class Util
 {

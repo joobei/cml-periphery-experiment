@@ -20,6 +20,9 @@ public abstract class ExperimentState : MonoBehaviour
     protected virtual void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        //a state is not enabled by default
+        //the experiment controller sets the starting state
+        //to enabled when the program launches.
         enabled = false;
     }
 
@@ -46,13 +49,17 @@ public abstract class ExperimentState : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        //enable only needed by current state
+        //enable only Objects needed by current state
         foreach (GameObject gameObject in neededObjects)
         {
             gameObject.SetActive(true);
         }
+
+        //enable self
         enabled = true;
+
         playSound("Start");
+
         Debug.Log("State: " + this.stateName);
     }
 
@@ -81,10 +88,6 @@ public abstract class ExperimentState : MonoBehaviour
                 audioSource.PlayOneShot(clip);
                 timeRepeat = 5f;
             }
-            //else
-            //{
-
-            //}
         }
     }
 
