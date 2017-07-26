@@ -21,21 +21,17 @@ public class IntroductionState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void Update()
+    protected override void triggerPressed()
     {
-        base.Update();
-        if (Input.GetMouseButtonDown(0))
+        textIndex++;
+        if (textIndex >= introTextArray.Length)
         {
-            textIndex++;
-            if (textIndex >= introTextArray.Length)
-            {
-                textIndex = 0;
-                advanceState();
-            }
-            else
-            {
-                textPane.text = introTextArray[textIndex];
-            }
+            textIndex = 0;
+            advanceState();
+        }
+        else
+        {
+            textPane.text = introTextArray[textIndex];
         }
     }
 }

@@ -6,34 +6,14 @@ using UnityEngine;
 public class DockingState : ExperimentState
 {
     public enum DockingStateType
-{
-   toStart,
-   toEnd
-};
-
-public enum Transferfunction
-{
-        open,
-        closed,
-        visuoHaptic
-};
-
-
-public struct Translation
-{
-    public Vector3 from;
-    public Vector3 to;
-}
-
-public struct Trial
-{
-    public Translation translation;
-    public Transferfunction transferFunction;
-}
+    {
+        toStart,
+        toEnd
+    };
 
     Trial currentTrial;
     private List<Trial> trials;
-    private DockingStateType dockingStateType = DockingState.toStart;
+    private DockingStateType dockingStateType = DockingStateType.toStart;
 
     //to keep the distance between target and cursor
     float distance;
@@ -44,14 +24,21 @@ public struct Trial
 
     public GameObject target, cursor;
 
-    public DockingState(){
+    public DockingState()
+    {
         stateName = "Docking";
     }
-
+    protected override void triggerPressed()
+    {
+        if (dockingStateType == DockingStateType.toEnd && distance < 0.05f)
+        { 
+            advance();
+        }
+    }
     protected override void Start()
     {
         base.Start();
-        
+
         //Generate positions from Util (static class)
         Vector3[,] positions = Util.generatePositions(eccentricities, depths);
         trials = Util.generateTrials(positions);
@@ -72,42 +59,36 @@ public struct Trial
         //grab distance between cursor and target
         distance = Vector3.Distance(target.transform.position, cursor.transform.position);
 
-        if (distance < 0.01 && dockingStateType == DockingState.toStart)
+
+        //move target toEnd position if close enough
+        if (distance < 0.01 && dockingStateType == DockingStateType.toStart)
         {
             playSound("toot");
             target.transform.localPosition = currentTrial.translation.to;
             dockingStateType = DockingStateType.toEnd;
         }
-
-        if (dockingStateType == DockingState.toEnd && Input.GetMouseButtonDown(0) && distance < 0.05f)
-        {   
-            
-                advance();
-            
-        }
-
-        
     }
 
     private void advance()
     {
         if (trials.Count > 0)
-                   {
-                    //todo: Log Trial!!
+        {
+            //todo: Log Trial!!
 
-                       //wand.TriggerHapticPulse(900);
-                       dockingStateType = DockingStateType.toStart;
-                       currentTrial = trials[0];
-                       trials.RemoveAt(0);
-                       Debug.Log("Advanced, ramaining : " + trials.Count);
-                       //move target to new position + height
-                       target.transform.localPosition = currentTrial.translation.from;
-                   }
-                   else {
-                    advanceState();
-                   }
+            //wand.TriggerHapticPulse(900);
+            dockingStateType = DockingStateType.toStart;
+            currentTrial = trials[0];
+            trials.RemoveAt(0);
+            Debug.Log("Advanced, ramaining : " + trials.Count);
+            //move target to new position + height
+            target.transform.localPosition = currentTrial.translation.from;
+        }
+        else
+        {
+            advanceState();
+        }
 
-               
+
 
     }
 }

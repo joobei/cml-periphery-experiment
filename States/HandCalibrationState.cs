@@ -21,21 +21,18 @@ public class HandCalibrationState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void Update()
-    {
-        base.Update();
-        if (Input.GetMouseButtonDown(0))
+    protected override void triggerPressed() {
+        
+        textIndex++;
+        if (textIndex >= introTextArray.Length)
         {
-            textIndex++;
-            if (textIndex >= introTextArray.Length)
-            {
-                textIndex = 0;
-                advanceState();
-            }
-            else
-            {
-                textPane.text = introTextArray[textIndex];
-            }
+            textIndex = 0;
+            advanceState();
         }
+        else
+        {
+            textPane.text = introTextArray[textIndex];
+        }
+        
     }
 }

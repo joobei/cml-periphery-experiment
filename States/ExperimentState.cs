@@ -7,11 +7,16 @@ public abstract class ExperimentState : MonoBehaviour
 {
     AudioSource audioSource;
     float timeRepeat = -1f; //to stop sounds from playing too fast - needs fixing
+    float triggerTime = -1f;
 
     public ExperimentState previousState;
     public ExperimentState nextState;
 
     protected String stateName;
+
+    //private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
+    private SteamVR_Controller.Device device;
+    private SteamVR_TrackedObject trackedObject;
 
     //objects this state is going to use 
     //and therefore needs to activate (in Activate method)
@@ -20,6 +25,7 @@ public abstract class ExperimentState : MonoBehaviour
     protected virtual void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
         //a state is not enabled by default
         //the experiment controller sets the starting state
         //to enabled when the program launches.
@@ -29,11 +35,43 @@ public abstract class ExperimentState : MonoBehaviour
     protected virtual void Update()
     {
         timeRepeat -= Time.deltaTime;
+        
+
         if (Input.GetMouseButtonDown(1))
         {
             regressState();
         }
+
+       
+        var controllerObject = GameObject.Find("RightController");
+
+        //HACK For trigger!!!
+        bool triggerClicked = false;
+        try
+        {
+            trackedObject = controllerObject.GetComponent<SteamVR_TrackedObject>();
+            device = SteamVR_Controller.Input((int)trackedObject.index);
+            Vector2 triggerPosition = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger);
+            triggerClicked = triggerPosition.x > 0.96f; // trigger treshold seems to be 0.9f
+        }
+        catch (NullReferenceException e) { Debug.LogWarning(e.Message); }
+
+        
+        if (triggerClicked && triggerTime < 0)
+        {
+            triggerPressed();
+            triggerTime = 1f;
+        }
+
+        //reset button timeout if trigger button is up
+        if (SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.FarthestRight)).GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            triggerTime = -1;
+        }
+
     }
+
+    protected abstract void triggerPressed();
 
     //Disable all objects other
     //than the ones the state needs
@@ -86,7 +124,7 @@ public abstract class ExperimentState : MonoBehaviour
             if (timeRepeat < 0)
             {
                 audioSource.PlayOneShot(clip);
-                timeRepeat = 5f;
+                timeRepeat = .5f;
             }
         }
     }
