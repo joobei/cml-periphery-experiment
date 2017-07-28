@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class PupilCalibMarker : MonoBehaviour {
 
+    public ExperimentState state;
 	RectTransform _transform;
 	Image _image;
 	bool _started=false;
@@ -28,6 +29,8 @@ public class PupilCalibMarker : MonoBehaviour {
 	void OnCalibrationDone(PupilGazeTracker m)
 	{
 		_started = false;
+        state.enabled = false;
+        state.nextState.enabled = true;
 	}
 
 	void OnCalibrationData(PupilGazeTracker m,float x,float y)
