@@ -27,24 +27,24 @@ public class DockingState : ExperimentState
     public DockingState()
     {
         stateName = "Docking";
-    }
-    protected override void triggerPressed()
-    {
-        Debug.Log(stateName + " triggerPressed");
-        if (dockingStateType == DockingStateType.toEnd && distance < 0.05f)
-        { 
-            advance();
-        }
-    }
-    void Start()
-    {
+        
         //Generate positions from Util (static class)
         Vector3[,] positions = Util.generatePositions(eccentricities, depths);
         trials = Util.generateTrials(positions);
         currentTrial = trials[0];
         dockingStateType = DockingStateType.toStart;
+
     }
 
+    protected override void triggerPressed()
+    {
+        //Debug.Log(stateName + " triggerPressed");
+        if (dockingStateType == DockingStateType.toEnd && distance < 0.05f)
+        { 
+            advance();
+        }
+    }
+   
     public override void OnEnable()
     {
         base.OnEnable();

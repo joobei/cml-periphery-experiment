@@ -85,10 +85,10 @@ public abstract class ExperimentState : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
+
         audioSource = GetComponent<AudioSource>();
         playSound("Start");
-
-        Debug.Log("State: " + this.stateName);
+        //Debug.Log("State: " + this.stateName);
     }
 
     public virtual void advanceState()

@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
-public class HandCalibrationState : ExperimentState
-{
+public class OutroState : ExperimentState {
+
     public String[] introTextArray;
     short textIndex = 0;
     public Text textPane;
 
-    public GameObject cursor, hmd;
-
-    public HandCalibrationState()
+    public OutroState()
     {
-        stateName = "Arm Length Calibration";
+        stateName = "Debriefing";
     }
 
     public override void OnEnable()
@@ -23,9 +21,9 @@ public class HandCalibrationState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void triggerPressed() {
-        //Debug.Log("Arm Length: "+armLength.ToString());
-        cursor.SetActive(false);
+    protected override void triggerPressed()
+    {
+        Debug.Log(stateName + " triggerPressed");
         textIndex++;
         if (textIndex >= introTextArray.Length)
         {
@@ -34,9 +32,9 @@ public class HandCalibrationState : ExperimentState
         }
         else
         {
-            armLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
             textPane.text = introTextArray[textIndex];
         }
-        
+
     }
+
 }
