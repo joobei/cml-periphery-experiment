@@ -11,6 +11,7 @@ public abstract class ExperimentState : MonoBehaviour
 
     public ExperimentState previousState;
     public ExperimentState nextState;
+    protected float armLength;
 
     protected String stateName;
 
@@ -21,16 +22,6 @@ public abstract class ExperimentState : MonoBehaviour
     //objects this state is going to use 
     //and therefore needs to activate (in Activate method)
     public GameObject[] neededObjects;
-
-    protected virtual void Start()
-    {
-        audioSource = GetComponent<AudioSource>();
-
-        //a state is not enabled by default
-        //the experiment controller sets the starting state
-        //to enabled when the program launches.
-        enabled = false;
-    }
 
     protected virtual void Update()
     {
@@ -49,10 +40,12 @@ public abstract class ExperimentState : MonoBehaviour
         bool triggerClicked = false;
         try
         {
+           
             trackedObject = controllerObject.GetComponent<SteamVR_TrackedObject>();
             device = SteamVR_Controller.Input((int)trackedObject.index);
-            Vector2 triggerPosition = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger);
-            triggerClicked = triggerPosition.x > 0.96f; // trigger treshold seems to be 0.9f
+            triggerClicked = device.GetHairTriggerDown();
+            //Vector2 triggerPosition = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger);
+            //triggerClicked = triggerPosition.x > 0.999f; // trigger treshold seems to be 0.9f
         }
         catch (NullReferenceException e) { Debug.LogWarning(e.Message); }
 
@@ -61,6 +54,7 @@ public abstract class ExperimentState : MonoBehaviour
         {
             triggerPressed();
             triggerTime = 1f;
+            triggerClicked = false;
         }
 
         //reset button timeout if trigger button is up
@@ -68,14 +62,13 @@ public abstract class ExperimentState : MonoBehaviour
         {
             triggerTime = -1;
         }
-
     }
 
     protected abstract void triggerPressed();
 
     //Disable all objects other
     //than the ones the state needs
-    public virtual void Activate()
+    public virtual void OnEnable()
     {
         //disable all objects tagged "useful"
         //this is so that we don't disable everything
@@ -92,10 +85,7 @@ public abstract class ExperimentState : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-
-        //enable self
-        enabled = true;
-
+        audioSource = GetComponent<AudioSource>();
         playSound("Start");
 
         Debug.Log("State: " + this.stateName);
@@ -107,13 +97,14 @@ public abstract class ExperimentState : MonoBehaviour
         enabled = false;
 
         //enable the next one
-        nextState.Activate();
+        if (nextState != null)
+            nextState.enabled = true;
     }
 
     public virtual void regressState()
     {
         enabled = false;
-        previousState.Activate();
+        previousState.enabled = true;
     }
 
     protected void playSound(String filename)

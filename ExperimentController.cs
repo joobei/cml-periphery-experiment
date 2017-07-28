@@ -19,7 +19,7 @@ public class ExperimentController : Singleton<ExperimentController>
     void Start() {
         //trackedObject = controller.GetComponentInChildren<SteamVR_TrackedObject>();
         currentState = startingState;
-        currentState.Activate();
+        currentState.enabled = true;
     }
        
     // Update is called once per frame

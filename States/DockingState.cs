@@ -30,15 +30,14 @@ public class DockingState : ExperimentState
     }
     protected override void triggerPressed()
     {
+        Debug.Log(stateName + " triggerPressed");
         if (dockingStateType == DockingStateType.toEnd && distance < 0.05f)
         { 
             advance();
         }
     }
-    protected override void Start()
+    void Start()
     {
-        base.Start();
-
         //Generate positions from Util (static class)
         Vector3[,] positions = Util.generatePositions(eccentricities, depths);
         trials = Util.generateTrials(positions);
@@ -46,9 +45,9 @@ public class DockingState : ExperimentState
         dockingStateType = DockingStateType.toStart;
     }
 
-    public override void Activate()
+    public override void OnEnable()
     {
-        base.Activate();
+        base.OnEnable();
         target.transform.localPosition = currentTrial.translation.from;
     }
 
@@ -67,6 +66,11 @@ public class DockingState : ExperimentState
             target.transform.localPosition = currentTrial.translation.to;
             dockingStateType = DockingStateType.toEnd;
         }
+
+        if (currentTrial.translation.from.Equals(currentTrial.translation.to))
+        {
+            advance();
+        }
     }
 
     private void advance()
@@ -77,10 +81,18 @@ public class DockingState : ExperimentState
 
             //wand.TriggerHapticPulse(900);
             dockingStateType = DockingStateType.toStart;
+
             currentTrial = trials[0];
             trials.RemoveAt(0);
+            //while (currentTrial.translation.from == currentTrial.translation.to)
+            //{
+            //    Debug.Log("skipped");
+            //    
+            //    currentTrial = trials[0];
+            //}
+
             Debug.Log("Advanced, ramaining : " + trials.Count);
-            //move target to new position + height
+            //move target to new position
             target.transform.localPosition = currentTrial.translation.from;
         }
         else

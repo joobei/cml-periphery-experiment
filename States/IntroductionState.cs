@@ -15,9 +15,9 @@ public class IntroductionState : ExperimentState
         stateName = "Introduction";
     }
 
-    public override void Activate()
+    public override void OnEnable()
     {
-        base.Activate();
+        base.OnEnable();
         textPane.text = introTextArray[textIndex];
     }
 
@@ -33,5 +33,6 @@ public class IntroductionState : ExperimentState
         {
             textPane.text = introTextArray[textIndex];
         }
+        Debug.Log(stateName+" triggerPressed");
     }
 }

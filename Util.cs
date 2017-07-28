@@ -6,9 +6,9 @@ using System;
 
 public enum Transferfunction
 {
-    open,
-    closed,
-    visuoHaptic
+    //open,
+    closed
+    //visuoHaptic
 };
 public struct Translation
 {
@@ -60,8 +60,8 @@ public static class Util
                     if (x!=startColumn)
                     {
                         Trial newTrial = new Trial();
-                        newTrial.translation.from = positions[x, startColumn];
-                        newTrial.translation.to = positions[x, y];
+                        newTrial.translation.to = positions[x, startColumn];
+                        newTrial.translation.from = positions[x, y];
                         newTrial.transferFunction = transferFunction;
                         trials.Add(newTrial);
                     }
