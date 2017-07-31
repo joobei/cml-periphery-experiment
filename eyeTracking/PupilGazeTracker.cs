@@ -456,7 +456,7 @@ public class PupilGazeTracker : MonoBehaviour
     public UnityEngine.UI.Text legend;
     public bool displayUILog = !false;
     private RaycastHit hit;
-    private String selection;
+    //private String selection;
     public void checkEyeTrackingPoint(Vector3 targetPosition)
     {
         /*
@@ -477,7 +477,7 @@ public class PupilGazeTracker : MonoBehaviour
         {*/
             lineRenderer1.SetPosition(0, Vector3.zero);
             lineRenderer1.SetPosition(1, Vector3.zero);
-            selection = String.Empty;
+            //selection = String.Empty;
         /*}
         
         if (displayUILog)

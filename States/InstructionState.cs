@@ -1,19 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
-public class OutroState : ExperimentState {
-
+public class InstructionState : ExperimentState
+{
     public String[] introTextArray;
     short textIndex = 0;
-    public Text textPane;
-
-    public OutroState()
-    {
-        stateName = "Debriefing";
-    }
+    public GameObject canvasObject;
+    public Text textPane;   
 
     public override void OnEnable()
     {
@@ -23,7 +19,6 @@ public class OutroState : ExperimentState {
 
     protected override void triggerPressed()
     {
-        Debug.Log(stateName + " triggerPressed");
         textIndex++;
         if (textIndex >= introTextArray.Length)
         {
@@ -34,7 +29,5 @@ public class OutroState : ExperimentState {
         {
             textPane.text = introTextArray[textIndex];
         }
-
     }
-
 }

@@ -7,22 +7,26 @@ using UnityEngine.UI;
 public class EyeCalibrationState : ExperimentState
 {
     public PupilCalibMarker calibrationMarker;
-    public String[] introTextArray;
-    short textIndex = 0;
-    public Text textPane;
-     
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        calibrationMarker.startCalibrate();
+    }
+
     protected override void triggerPressed()
     {
-        textIndex++;
-        if (textIndex >= introTextArray.Length)
+        //advanceState();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (calibrationMarker._finished)
         {
-            textIndex = 0;
-            textPane.enabled = false;
-            calibrationMarker.startCalibrate();
-        }
-        else
-        {
-            textPane.text = introTextArray[textIndex];
+            advanceState();
         }
     }
+
+   
 }

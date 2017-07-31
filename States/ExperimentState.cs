@@ -6,8 +6,8 @@ using UnityEngine;
 public abstract class ExperimentState : MonoBehaviour
 {
     AudioSource audioSource;
-    float timeRepeat = -1f; //to stop sounds from playing too fast - needs fixing
-    float triggerTime = -1f;
+    protected float timeRepeat = 1f; //to stop sounds from playing too fast - needs fixing
+    protected float triggerTime = -1f;
 
     public ExperimentState previousState;
     public ExperimentState nextState;
@@ -38,18 +38,20 @@ public abstract class ExperimentState : MonoBehaviour
 
         //HACK For trigger!!!
         bool triggerClicked = false;
-        try
+        if (timeRepeat < 0)
         {
-           
-            trackedObject = controllerObject.GetComponent<SteamVR_TrackedObject>();
-            device = SteamVR_Controller.Input((int)trackedObject.index);
-            triggerClicked = device.GetHairTriggerDown();
-            //Vector2 triggerPosition = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger);
-            //triggerClicked = triggerPosition.x > 0.999f; // trigger treshold seems to be 0.9f
-        }
-        catch (NullReferenceException e) { Debug.LogWarning(e.Message); }
+            try
+            {
 
-        
+                trackedObject = controllerObject.GetComponent<SteamVR_TrackedObject>();
+                device = SteamVR_Controller.Input((int)trackedObject.index);
+                triggerClicked = device.GetHairTriggerDown();
+                //Vector2 triggerPosition = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger);
+                //triggerClicked = triggerPosition.x > 0.999f; // trigger treshold seems to be 0.9f
+            }
+            catch (NullReferenceException e) { Debug.LogWarning(e.Message); }
+        }
+
         if (triggerClicked && triggerTime < 0)
         {
             triggerPressed();
@@ -87,7 +89,8 @@ public abstract class ExperimentState : MonoBehaviour
         }
 
         audioSource = GetComponent<AudioSource>();
-        playSound("Start");
+         AudioClip clip = (AudioClip)Resources.Load("Start");
+        audioSource.PlayOneShot(clip);
         //Debug.Log("State: " + this.stateName);
     }
 

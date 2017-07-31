@@ -14,93 +14,108 @@ public class DockingState : ExperimentState
     Trial currentTrial;
     private List<Trial> trials;
     private DockingStateType dockingStateType = DockingStateType.toStart;
+    public PupilGazeTracker gazeTracker;
+    public bool enforceGaze;
 
     //to keep the distance between target and cursor
     float distance;
 
     //eccentricities and depths
-    List<int> eccentricities = new List<int>() { -7, -3, 0, 3, 7 }; //Retinal eccentricity breaks (parafoveal 3, perifoveal 7) 
-    List<float> depths = new List<float>() { 0.4f, .5f, .7f }; //depths at which to put the targets
+    public List<int> eccentricities = new List<int>(); //Retinal eccentricity breaks (parafoveal 3, perifoveal 7) 
+    public List<float> depths = new List<float>(); //depths at which to put the targets
 
     public GameObject target, cursor;
 
     public DockingState()
     {
         stateName = "Docking";
-        
-        //Generate positions from Util (static class)
-        Vector3[,] positions = Util.generatePositions(eccentricities, depths);
-        trials = Util.generateTrials(positions);
-        currentTrial = trials[0];
-        dockingStateType = DockingStateType.toStart;
+
+
 
     }
 
     protected override void triggerPressed()
     {
-        //Debug.Log(stateName + " triggerPressed");
-        if (dockingStateType == DockingStateType.toEnd && distance < 0.05f)
-        { 
-            advance();
-        }
+        //only advance if we are within the threshold
+
+        advance();
+
     }
-   
+
     public override void OnEnable()
     {
         base.OnEnable();
-        target.transform.localPosition = currentTrial.translation.from;
+        //Generate positions from Util (static class)
+        Vector3[,] positions = Util.generatePositions(eccentricities, depths);
+        trials = Util.generateTrials(positions);
+        dockingStateType = DockingStateType.toStart;
+        currentTrial = trials[0];
+        target.transform.localPosition = currentTrial.translation.start;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        //grab distance between cursor and target
-        distance = Vector3.Distance(target.transform.position, cursor.transform.position);
-
-
-        //move target toEnd position if close enough
-        if (distance < 0.01 && dockingStateType == DockingStateType.toStart)
+        if (gazeTracker.checkEyeTrackingThreshold(0.1f) && timeRepeat < 0)
         {
-            playSound("toot");
-            target.transform.localPosition = currentTrial.translation.to;
-            dockingStateType = DockingStateType.toEnd;
+            resetTrial();
         }
+    }
 
-        if (currentTrial.translation.from.Equals(currentTrial.translation.to))
+    private void resetTrial()
+    {
+        switch (dockingStateType)
         {
-            advance();
+            case DockingStateType.toStart:
+                playSound("Error");
+                break;
+            case DockingStateType.toEnd:
+                playSound("Error");
+                dockingStateType = DockingStateType.toStart;
+                target.transform.localPosition = currentTrial.translation.start;
+                break;
         }
     }
 
     private void advance()
     {
-        if (trials.Count > 0)
+        //grab distance between cursor and target
+        distance = Vector3.Distance(target.transform.position, cursor.transform.position);
+
+        switch (dockingStateType)
         {
-            //todo: Log Trial!!
+            case DockingStateType.toStart:
 
-            //wand.TriggerHapticPulse(900);
-            dockingStateType = DockingStateType.toStart;
+                playSound("toot");
+                target.transform.localPosition = currentTrial.translation.end;
+                dockingStateType = DockingStateType.toEnd;
 
-            currentTrial = trials[0];
-            trials.RemoveAt(0);
-            //while (currentTrial.translation.from == currentTrial.translation.to)
-            //{
-            //    Debug.Log("skipped");
-            //    
-            //    currentTrial = trials[0];
-            //}
+                break;
+            case DockingStateType.toEnd:
 
-            Debug.Log("Advanced, ramaining : " + trials.Count);
-            //move target to new position
-            target.transform.localPosition = currentTrial.translation.from;
+
+                if (distance < 0.05f)
+                {
+                    if (trials.Count > 0)
+                    {
+                        //todo: Log Trial!
+                        dockingStateType = DockingStateType.toStart;
+
+                        currentTrial = trials[0];
+                        trials.RemoveAt(0);
+
+                        Debug.Log("Advanced, ramaining : " + trials.Count);
+                        //move target to new position
+                        target.transform.localPosition = currentTrial.translation.start;
+                    }
+                    else
+                    {
+                        advanceState();
+                    }
+                }
+                break;
+
         }
-        else
-        {
-            advanceState();
-        }
-
-
-
     }
 }

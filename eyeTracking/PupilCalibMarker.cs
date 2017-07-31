@@ -8,6 +8,7 @@ public class PupilCalibMarker : MonoBehaviour {
 	RectTransform _transform;
 	Image _image;
 	bool _started=false;
+    public bool _finished = false;
 	float x,y;
 
 	// Use this for initialization
@@ -29,8 +30,7 @@ public class PupilCalibMarker : MonoBehaviour {
 	void OnCalibrationDone(PupilGazeTracker m)
 	{
 		_started = false;
-        state.enabled = false;
-        state.nextState.enabled = true;
+        _finished = true;
 	}
 
 	void OnCalibrationData(PupilGazeTracker m,float x,float y)

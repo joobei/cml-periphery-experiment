@@ -12,8 +12,8 @@ public enum Transferfunction
 };
 public struct Translation
 {
-    public Vector3 from;
-    public Vector3 to;
+    public Vector3 start;
+    public Vector3 end;
 }
 
 public struct Trial
@@ -51,8 +51,8 @@ public static class Util
         int startColumn = positions.GetLength(0)/2;
         //}
 
-        var transferFunctions = Enum.GetValues(typeof(Transferfunction));
-        foreach (Transferfunction transferFunction in transferFunctions) { 
+        //var transferFunctions = Enum.GetValues(typeof(Transferfunction));
+        //foreach (Transferfunction transferFunction in transferFunctions) { 
             for (int x =0; x<positions.GetLength(0); ++x)
             {
                 for (int y = 0; y < positions.GetLength(1); ++y)
@@ -60,14 +60,14 @@ public static class Util
                     if (x!=startColumn)
                     {
                         Trial newTrial = new Trial();
-                        newTrial.translation.to = positions[x, startColumn];
-                        newTrial.translation.from = positions[x, y];
-                        newTrial.transferFunction = transferFunction;
+                        newTrial.translation.end = positions[x, startColumn];
+                        newTrial.translation.start = positions[x, y];
+                        //newTrial.transferFunction = transferFunction;
                         trials.Add(newTrial);
                     }
                 }
             }
-        }
+        //}
 
         return trials;
     }
