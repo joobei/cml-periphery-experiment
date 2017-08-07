@@ -1,0 +1,53 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using System;
+
+public class Node
+{
+    public Rect rect; //points to the rect that is currently used (std or orthographic)
+    public Rect rectStd;
+    public Rect rectOrth;
+    public Vector3 coordinates;
+	public string title;
+	public GUIStyle style;
+	public bool isDragged;
+
+	public Node(Vector3 coordinates, Vector2 rectPosition, Vector2 rectPositionOrth, float width, float height, GUIStyle nodeStyle)
+	{
+        rect = rectStd = new Rect(rectPosition.x, rectPosition.y, width, height);
+        //this.coordinates = new Vector3(rectPosition.x, 0f, rectPosition.y);
+        this.coordinates = coordinates;
+        rectOrth = new Rect(rectPositionOrth.x, rectPositionOrth.y, width, height);
+        style = nodeStyle;
+	}
+
+	public void Drag(Vector2 delta)
+	{
+		rect.position += delta;
+	}
+
+	public void Draw()
+	{
+        GUI.Box(rect, title, style);
+    }
+
+	public bool ProcessEvents(Event e)
+	{
+		return false;
+	}
+
+    public override string ToString()
+    {
+        return rect.ToString();
+    }
+
+    public void SetRect(bool isOrthographic)
+    {
+        if (isOrthographic)
+            rect = rectOrth;
+        else
+            rect = rectStd;
+    }
+}

@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 public enum Transferfunction
 {
     //open,
     closed
     //visuoHaptic
 };
+
 public struct Translation
 {
     public Vector3 start;
     public Vector3 end;
 }
 
-public struct Trial
+public struct TrialNico
 {
     public Translation translation;
     public Transferfunction transferFunction;
@@ -40,35 +40,30 @@ public static class Util
                 positions[angles.IndexOf(angle), depths.IndexOf(depth)] = target;
             }
         }
+        Debug.Log("Positions Generated: " + positions.Length);
         return positions;
     }
 
-    public static List<Trial> generateTrials(Vector3[,] positions) {
-        List<Trial> trials = new List<Trial>();
+    public static List<TrialNico> generateTrials(Vector3[,] positions)
+    {
+        List<TrialNico> trials = new List<TrialNico>();
 
-        //if (positions.GetLength(0) % 2 == 0) { 
-        //TODO: Make this fail proof
-        int startColumn = positions.GetLength(0)/2;
-        //}
-
-        //var transferFunctions = Enum.GetValues(typeof(Transferfunction));
-        //foreach (Transferfunction transferFunction in transferFunctions) { 
-            for (int x =0; x<positions.GetLength(0); ++x)
+        var transferFunctions = Enum.GetValues(typeof(Transferfunction));
+        foreach (Transferfunction transferFunction in transferFunctions)
+        {
+            for (int x = 0; x < positions.GetLength(0); ++x)
             {
-                for (int y = 0; y < positions.GetLength(1); ++y)
+                for (int y = positions.GetLength(1); y >= 0; --y)
                 {
-                    if (x!=startColumn)
-                    {
-                        Trial newTrial = new Trial();
-                        newTrial.translation.end = positions[x, startColumn];
-                        newTrial.translation.start = positions[x, y];
-                        //newTrial.transferFunction = transferFunction;
-                        trials.Add(newTrial);
-                    }
+                    Debug.Log("x: " + x + ", y: " + y);
+                    TrialNico newTrial = new TrialNico();
+                    newTrial.translation.end = positions[x, y];
+                    newTrial.translation.start = positions[x, y];
+                    trials.Add(newTrial);
                 }
             }
-        //}
-
+        }
+        Debug.Log("Trials Generated: " + trials.Count);
         return trials;
     }
 }

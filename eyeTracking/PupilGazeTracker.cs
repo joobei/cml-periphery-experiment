@@ -151,6 +151,7 @@ public class PupilGazeTracker : MonoBehaviour
     EyeData leftEye;
     EyeData rightEye;
     public Vector2 centerEye;
+    public Vector2 fixationPoint;
 
     public delegate void OnCalibrationStartedDeleg(PupilGazeTracker manager);
 	public delegate void OnCalibrationDoneDeleg(PupilGazeTracker manager);
@@ -186,6 +187,11 @@ public class PupilGazeTracker : MonoBehaviour
 
     public GazeDisplayMode gazeDisplayMode = GazeDisplayMode.CenterEye;
 
+    public void calibrateFixation()
+    {
+        fixationPoint = centerEye;
+    }
+
     public GazeDisplayMode getGazeDisplayMode()
     {
         return gazeDisplayMode;
@@ -193,7 +199,7 @@ public class PupilGazeTracker : MonoBehaviour
 
     public bool checkEyeTrackingThreshold(float threshold)
     {
-        float distanceToCenter = Vector2.Distance(new Vector2(0.5f, 0.5f), centerEye);
+        float distanceToCenter = Vector2.Distance(centerEye, fixationPoint);
         return (distanceToCenter <= threshold);
     }
 

@@ -13,6 +13,8 @@ public class DockingState : ExperimentState
 
     Trial currentTrial;
     private List<Trial> trials;
+    //TrialNico currentTrial;
+    //private List<TrialNico> trials;
     private DockingStateType dockingStateType = DockingStateType.toStart;
     public PupilGazeTracker gazeTracker;
     public bool enforceGaze;
@@ -46,18 +48,24 @@ public class DockingState : ExperimentState
     {
         base.OnEnable();
         //Generate positions from Util (static class)
-        Vector3[,] positions = Util.generatePositions(eccentricities, depths);
-        trials = Util.generateTrials(positions);
+        string json = System.IO.File.ReadAllText(Application.dataPath + "/../Trials.json");
+        trials = new List<Trial>(JsonHelper.FromJson<Trial>(json));
+        //Vector3[,] positions = Util.generatePositions(eccentricities, depths);
+        //trials = Util.generateTrials(positions);
+        //foreach (TrialNico trial in trials)
+        foreach (Trial trial in trials)
+            Debug.Log("trial " + trials.IndexOf(trial) + ": " + trial);
         dockingStateType = DockingStateType.toStart;
         currentTrial = trials[0];
-        target.transform.localPosition = currentTrial.translation.start;
+        target.transform.localPosition = currentTrial.from;
+        //target.transform.localPosition = currentTrial.translation.start;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (gazeTracker.checkEyeTrackingThreshold(0.1f) && timeRepeat < 0)
+        if (!gazeTracker.checkEyeTrackingThreshold(0.3f) && timeRepeat < 0 && enforceGaze)
         {
             resetTrial();
         }
@@ -73,7 +81,8 @@ public class DockingState : ExperimentState
             case DockingStateType.toEnd:
                 playSound("Error");
                 dockingStateType = DockingStateType.toStart;
-                target.transform.localPosition = currentTrial.translation.start;
+                target.transform.localPosition = currentTrial.from;
+                //target.transform.localPosition = currentTrial.translation.start;
                 break;
         }
     }
@@ -88,7 +97,8 @@ public class DockingState : ExperimentState
             case DockingStateType.toStart:
 
                 playSound("toot");
-                target.transform.localPosition = currentTrial.translation.end;
+                target.transform.localPosition = currentTrial.to;
+                //target.transform.localPosition = currentTrial.translation.end;
                 dockingStateType = DockingStateType.toEnd;
 
                 break;
@@ -100,14 +110,15 @@ public class DockingState : ExperimentState
                     if (trials.Count > 0)
                     {
                         //todo: Log Trial!
-                        dockingStateType = DockingStateType.toStart;
 
                         currentTrial = trials[0];
                         trials.RemoveAt(0);
 
                         Debug.Log("Advanced, ramaining : " + trials.Count);
                         //move target to new position
-                        target.transform.localPosition = currentTrial.translation.start;
+                        target.transform.localPosition = currentTrial.from;
+                        //target.transform.localPosition = currentTrial.translation.start;
+                        dockingStateType = DockingStateType.toStart;
                     }
                     else
                     {

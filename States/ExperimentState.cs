@@ -9,8 +9,8 @@ public abstract class ExperimentState : MonoBehaviour
     protected float timeRepeat = 1f; //to stop sounds from playing too fast - needs fixing
     protected float triggerTime = -1f;
 
-    public ExperimentState previousState;
     public ExperimentState nextState;
+
     protected float armLength;
 
     protected String stateName;
@@ -28,10 +28,10 @@ public abstract class ExperimentState : MonoBehaviour
         timeRepeat -= Time.deltaTime;
         
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            regressState();
-        }
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    regressState();
+        //}
 
        
         var controllerObject = GameObject.Find("RightController");
@@ -99,16 +99,29 @@ public abstract class ExperimentState : MonoBehaviour
         //disable this state (i.e. update will stop being called)
         enabled = false;
 
+        //tried to enable next state in list but did not work because it was not enabled
+        //ExperimentState[] states = GetComponents<ExperimentState>(true);
+        //for (int i = 0; i < states.Length; i++)
+        //{
+        //    if (states[i].Equals(this))
+        //    {
+        //        this.enabled = false;
+        //        if (states[i + 1] != null)
+        //            states[i + 1].enabled = true;
+        //    }
+        //    break;
+        //}
+
         //enable the next one
         if (nextState != null)
             nextState.enabled = true;
     }
 
-    public virtual void regressState()
-    {
-        enabled = false;
-        previousState.enabled = true;
-    }
+    //public virtual void regressState()
+    //{
+    //    enabled = false;
+    //    previousState.enabled = true;
+    //}
 
     protected void playSound(String filename)
     {
