@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class DockingState : ExperimentState
 {
@@ -27,6 +28,9 @@ public class DockingState : ExperimentState
     public List<float> depths = new List<float>(); //depths at which to put the targets
 
     public GameObject target, cursor;
+
+    string logPath;
+    int trialCount = 1;
 
     public DockingState()
     {
@@ -59,6 +63,15 @@ public class DockingState : ExperimentState
         currentTrial = trials[0];
         target.transform.localPosition = currentTrial.from;
         //target.transform.localPosition = currentTrial.translation.start;
+        logPath = Application.dataPath + "/../log.csv";
+        if (File.Exists(logPath))
+        {
+            //append blank line to mark separation form last experiment run
+            using (StreamWriter sw = File.AppendText(logPath))
+            {
+                sw.WriteLine();
+            }
+        }
     }
 
     protected override void Update()
@@ -89,6 +102,14 @@ public class DockingState : ExperimentState
 
     private void advance()
     {
+        using (StreamWriter sw = File.AppendText(logPath))
+        {
+            //trial_number, time_in_milliseconds, cursor.x, cursor.y, cursor.z, target.x, target.y,target.z, state
+            string line
+                = string.Format("{0}", trialCount);
+            sw.WriteLine(line);
+        }
+
         //grab distance between cursor and target
         distance = Vector3.Distance(target.transform.position, cursor.transform.position);
 
@@ -114,11 +135,12 @@ public class DockingState : ExperimentState
                         currentTrial = trials[0];
                         trials.RemoveAt(0);
 
-                        Debug.Log("Advanced, ramaining : " + trials.Count);
+                        Debug.Log("Advanced, remaining : " + trials.Count);
                         //move target to new position
                         target.transform.localPosition = currentTrial.from;
                         //target.transform.localPosition = currentTrial.translation.start;
                         dockingStateType = DockingStateType.toStart;
+                        trialCount++;
                     }
                     else
                     {
