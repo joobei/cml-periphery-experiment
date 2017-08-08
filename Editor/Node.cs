@@ -7,8 +7,8 @@ using System;
 public class Node
 {
     public Rect rect; //points to the rect that is currently used (std or orthographic)
-    public Rect rectStd;
-    public Rect rectOrth;
+    Rect rectStd;
+    Rect rectOrth;
     public Vector3 coordinates;
 	public string title;
 	public GUIStyle style;
@@ -17,7 +17,6 @@ public class Node
 	public Node(Vector3 coordinates, Vector2 rectPosition, Vector2 rectPositionOrth, float width, float height, GUIStyle nodeStyle)
 	{
         rect = rectStd = new Rect(rectPosition.x, rectPosition.y, width, height);
-        //this.coordinates = new Vector3(rectPosition.x, 0f, rectPosition.y);
         this.coordinates = coordinates;
         rectOrth = new Rect(rectPositionOrth.x, rectPositionOrth.y, width, height);
         style = nodeStyle;

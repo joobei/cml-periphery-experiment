@@ -5,17 +5,17 @@ using UnityEngine;
 [System.Serializable]
 public class Trial
 {
-    public Vector3 from;
-    public Vector3 to;
+    public Vector3 start;
+    public Vector3 end;
 
-    public Trial(Vector3 from, Vector3 to)
+    public Trial(Vector3 start, Vector3 end)
     {
-        this.from = from;
-        this.to = to;
+        this.start = start;
+        this.end = end;
     }
 
     public override string ToString()
     {
-        return "From " + from.ToString() + " to " + to.ToString();
+        return "From " + start.ToString() + " to " + end.ToString();
     }
 }

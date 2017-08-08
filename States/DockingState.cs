@@ -27,25 +27,23 @@ public class DockingState : ExperimentState
     public List<int> eccentricities = new List<int>(); //Retinal eccentricity breaks (parafoveal 3, perifoveal 7) 
     public List<float> depths = new List<float>(); //depths at which to put the targets
 
-    public GameObject target, cursor;
+    public GameObject target, rightController, cursor;
 
     string logPath;
     int trialCount = 1;
+    float timeLast;
 
     public DockingState()
     {
         stateName = "Docking";
-
-
-
     }
 
     protected override void triggerPressed()
     {
         //only advance if we are within the threshold
-
-        advance();
-
+        distance = Vector3.Distance(target.transform.position, cursor.transform.position);
+        if (distance < 0.05f)
+            advance();
     }
 
     public override void OnEnable()
@@ -61,16 +59,20 @@ public class DockingState : ExperimentState
             Debug.Log("trial " + trials.IndexOf(trial) + ": " + trial);
         dockingStateType = DockingStateType.toStart;
         currentTrial = trials[0];
-        target.transform.localPosition = currentTrial.from;
+        trials.RemoveAt(0);
+        target.transform.localPosition = currentTrial.start;
+        timeLast = Time.time;
         //target.transform.localPosition = currentTrial.translation.start;
+
+        string line = ""; //blank line (if file already exists)
         logPath = Application.dataPath + "/../log.csv";
-        if (File.Exists(logPath))
+        if (!File.Exists(logPath)) //write header
+            line = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
+                "trial_number", "time_in_milliseconds", "cursor.x", "cursor.y",
+                "cursor.z", "target.x", "target.y", "target.z", "state");
+        using (StreamWriter sw = File.AppendText(logPath))
         {
-            //append blank line to mark separation form last experiment run
-            using (StreamWriter sw = File.AppendText(logPath))
-            {
-                sw.WriteLine();
-            }
+            sw.WriteLine(line);
         }
     }
 
@@ -94,7 +96,7 @@ public class DockingState : ExperimentState
             case DockingStateType.toEnd:
                 playSound("Error");
                 dockingStateType = DockingStateType.toStart;
-                target.transform.localPosition = currentTrial.from;
+                target.transform.localPosition = currentTrial.start;
                 //target.transform.localPosition = currentTrial.translation.start;
                 break;
         }
@@ -102,53 +104,56 @@ public class DockingState : ExperimentState
 
     private void advance()
     {
-        using (StreamWriter sw = File.AppendText(logPath))
-        {
-            //trial_number, time_in_milliseconds, cursor.x, cursor.y, cursor.z, target.x, target.y,target.z, state
-            string line
-                = string.Format("{0}", trialCount);
-            sw.WriteLine(line);
-        }
-
-        //grab distance between cursor and target
-        distance = Vector3.Distance(target.transform.position, cursor.transform.position);
-
+        LogTrial();
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
 
                 playSound("toot");
-                target.transform.localPosition = currentTrial.to;
+                target.transform.localPosition = currentTrial.end;
                 //target.transform.localPosition = currentTrial.translation.end;
                 dockingStateType = DockingStateType.toEnd;
 
                 break;
             case DockingStateType.toEnd:
-
-
-                if (distance < 0.05f)
+                if (trials.Count > 0)
                 {
-                    if (trials.Count > 0)
-                    {
-                        //todo: Log Trial!
+                    currentTrial = trials[0];
+                    trials.RemoveAt(0);
 
-                        currentTrial = trials[0];
-                        trials.RemoveAt(0);
-
-                        Debug.Log("Advanced, remaining : " + trials.Count);
-                        //move target to new position
-                        target.transform.localPosition = currentTrial.from;
-                        //target.transform.localPosition = currentTrial.translation.start;
-                        dockingStateType = DockingStateType.toStart;
-                        trialCount++;
-                    }
-                    else
-                    {
-                        advanceState();
-                    }
+                    Debug.Log("Advanced, remaining : " + trials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
+                    trialCount++;
+                }
+                else
+                {
+                    advanceState();
                 }
                 break;
+        }
+    }
 
+    private void LogTrial()
+    {
+        float deltaTime = Time.time - timeLast;
+        timeLast = Time.time;
+        Vector3 targetPos = target.transform.localPosition;
+
+        Transform rightCtrlParent = rightController.transform.parent;
+        rightController.transform.SetParent(target.transform.parent);
+        Vector3 cursorPos = rightController.transform.localPosition + cursor.transform.localPosition;
+        rightController.transform.SetParent(rightCtrlParent);
+
+        string line
+            = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}",
+            trialCount, deltaTime, cursorPos.x, cursorPos.y, cursorPos.z, targetPos.x,
+            targetPos.y, targetPos.z, dockingStateType);
+        using (StreamWriter sw = File.AppendText(logPath))
+        {
+            sw.WriteLine(line);
         }
     }
 }

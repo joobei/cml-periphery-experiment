@@ -16,8 +16,8 @@ public class NodeEditor : EditorWindow
     List<Node> nodes = new List<Node>();
     private float nodeWidth = 30;
     private float nodeHeight = 30;
-    private List<int> angles;
-    private List<float> depths;
+    private List<int> angles = new List<int>() { -10, -5, 0, 5, 10 };
+    private List<float> depths = new List<float>() { 0.5f, 1f, 2f };
     List<Connection> connections = new List<Connection>();
     private GUIStyle nodeStyle;
     bool connecting = false;
@@ -33,8 +33,6 @@ public class NodeEditor : EditorWindow
         nodeStyle = new GUIStyle();
         nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
         nodeStyle.border = new RectOffset(12, 12, 12, 12);
-        angles = new List<int>() { -10, -5, 0, 5, 10 };
-        depths = new List<float>() { 0.5f, 1f, 2f };
         Vector3[,] positions = GeneratePositions(angles, depths);
 
         //where all the nodes are drawn from
@@ -99,20 +97,19 @@ public class NodeEditor : EditorWindow
     {
         GUILayout.Label("Base Settings", EditorStyles.boldLabel);
         fileName = EditorGUILayout.TextField("Serialization Filename", fileName);
-        if (GUILayout.Button("Load"))
+        if (GUILayout.Button("Load from json"))
         {
-            //TODO
+            //TODO: Try to load connections from fileName.json
         }
-        if (GUILayout.Button("Save"))
+        if (GUILayout.Button("Save to json"))
         {
             WriteTrialsToJson();
         }
-        //TODO: possibility to set angles and depths
-        //SerializedProperty
-        if (GUILayout.Button("Create nodes from angles and depths"))
-        {
-            //TODO
-        }
+        //TODO: editable list view of angles and depths
+        //if (GUILayout.Button("Create nodes from angles and depths"))
+        //{
+        //    //TODO: create em
+        //}
 
         groupEnabled = EditorGUILayout.BeginToggleGroup("Optional Settings", groupEnabled);
         isOrthographic = EditorGUILayout.Toggle("Orthographic", isOrthographic);
@@ -183,7 +180,7 @@ public class NodeEditor : EditorWindow
                 break;
             case EventType.MouseDown:
                 if (e.button == 1)
-                {  //menu to add node - not really used
+                {   //menu to add node - not really used
                     //ProcessContextMenu(e.mousePosition);
                 }
                 else if (e.button == 0) //to create connections
