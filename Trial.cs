@@ -7,6 +7,7 @@ public class Trial
 {
     public Vector3 start;
     public Vector3 end;
+    float startAngle, endAngle;
 
     public Transferfunction transferFunction;
 

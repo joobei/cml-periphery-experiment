@@ -145,6 +145,7 @@ public class NodeEditor : EditorWindow
         Trial[] trials = new Trial[connections.Count];
         for (int i = 0; i < connections.Count; i++)
         {
+            //TODO: Fix this to also save eccentricity
             trials[i] = new Trial(connections[i].From.coordinates, connections[i].To.coordinates);
         }
         string json = JsonHelper.ToJson(trials, true);

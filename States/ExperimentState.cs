@@ -56,6 +56,8 @@ public abstract class ExperimentState : MonoBehaviour
         {
             triggerTime = -1;
         }
+
+        if (Input.GetMouseButtonDown(0)) { triggerPressed(); }
     }
 
     protected abstract void triggerPressed();

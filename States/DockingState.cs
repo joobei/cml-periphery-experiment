@@ -113,10 +113,7 @@ public class DockingState : ExperimentState
             resetTrial();
         }
 
-        if (Input.GetMouseButtonDown(0) && (distance < 0.05f))
-        {
-            advance();
-        }
+        
     }
 
     private void resetTrial()
@@ -198,6 +195,20 @@ public class DockingState : ExperimentState
         Vector3 cursorPos = rightController.transform.localPosition + cursor.transform.localPosition;
         rightController.transform.SetParent(rightCtrlParent);
 
+        float currentTargetAngle;
+        if (dockingStateType == DockingStateType.toStart)
+        {
+            currentTargetAngle = Vector3.SignedAngle(new Vector3(0, 0, 0.5f), currentTrial.start,new Vector3(0,1,0));
+            Debug.Log("Angle :" + currentTargetAngle);
+        }
+        else
+        {
+            currentTargetAngle = Vector3.SignedAngle(new Vector3(0, 0, 0.5f), currentTrial.end, new Vector3(0, 1, 0));
+            Debug.Log("Angle :" + currentTargetAngle);
+
+        }
+
+
         string line = "";
         line += participant + ",";
         line += trialCount + ",";
@@ -209,6 +220,7 @@ public class DockingState : ExperimentState
         line += targetPos.x.ToString("F4") + ",";
         line += targetPos.z.ToString("F4") + ",";
         line += currentTrial.transferFunction.ToString()+",";
+        line += (int)currentTargetAngle + ",";
         line += dockingStateType.ToString();
 
         using (StreamWriter sw = File.AppendText(logPath))

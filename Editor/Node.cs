@@ -10,6 +10,7 @@ public class Node
     Rect rectStd;
     Rect rectOrth;
     public Vector3 coordinates;
+    
 	public string title;
 	public GUIStyle style;
 	public bool isDragged;
