@@ -23,20 +23,10 @@ public class HandCalibrationState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void triggerPressed() {
-        //Debug.Log("Arm Length: "+armLength.ToString());
-        cursor.SetActive(false);
-        textIndex++;
-        if (textIndex >= introTextArray.Length)
-        {
-            textIndex = 0;
-            advanceState();
-        }
-        else
-        {
-            armLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
-            textPane.text = introTextArray[textIndex];
-        }
-        
+    protected override void triggerPressed()
+    {
+        armLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
+        Debug.Log("Arm Length :" + armLength);
+        advanceState();
     }
 }

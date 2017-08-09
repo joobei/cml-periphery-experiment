@@ -16,8 +16,8 @@ public class NodeEditor : EditorWindow
     List<Node> nodes = new List<Node>();
     private float nodeWidth = 30;
     private float nodeHeight = 30;
-    private List<int> angles = new List<int>() { -10, -5, 0, 5, 10 };
-    private List<float> depths = new List<float>() { 0.5f, 1f, 2f };
+    private List<int> angles = new List<int>() { -20, -10, 0, 10,20 };
+    private List<float> depths = new List<float>() { 0.382f, 0.618f, 0.854f };
     List<Connection> connections = new List<Connection>();
     private GUIStyle nodeStyle;
     bool connecting = false;

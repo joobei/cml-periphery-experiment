@@ -26,14 +26,6 @@ public abstract class ExperimentState : MonoBehaviour
     protected virtual void Update()
     {
         timeRepeat -= Time.deltaTime;
-        
-
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    regressState();
-        //}
-
-       
         var controllerObject = GameObject.Find("RightController");
 
         //HACK For trigger!!!

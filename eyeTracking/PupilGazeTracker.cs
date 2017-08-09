@@ -174,9 +174,9 @@ public class PupilGazeTracker : MonoBehaviour
 	int _currCalibSamples=0;
     List<Dictionary<string, object>> _calibrationData = new List<Dictionary<string, object>>();
     Vector2[] _calibPoints = new Vector2[] { //calibrate using default 9 points
-            new Vector2 (0.5f, 0.5f), new Vector2 (0.2f, 0.2f), new Vector2 (0.2f, 0.5f),
-            new Vector2 (0.2f, 0.8f), new Vector2 (0.5f, 0.8f), new Vector2 (0.8f, 0.8f),
-            new Vector2 (0.8f, 0.5f), new Vector2 (0.8f, 0.2f), new Vector2 (0.5f, 0.2f)};
+            new Vector2 (0.5f, 0.5f), new Vector2 (0.4f, 0.4f), new Vector2 (0.4f, 0.5f),
+            new Vector2 (0.4f, 0.6f), new Vector2 (0.5f, 0.6f), new Vector2 (0.6f, 0.6f),
+            new Vector2 (0.6f, 0.5f), new Vector2 (0.6f, 0.4f), new Vector2 (0.5f, 0.4f)};
     EStatus m_status = EStatus.Idle;
 
     public string ServerIP="";
