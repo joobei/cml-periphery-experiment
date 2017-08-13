@@ -33,7 +33,6 @@ public class NodeEditor : EditorWindow
         nodeStyle = new GUIStyle();
         nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
         nodeStyle.border = new RectOffset(12, 12, 12, 12);
-        Vector3[,] positions = GeneratePositions(angles, depths);
 
         //where all the nodes are drawn from
         origin = new Vector2(EditorWindow.GetWindow(typeof(NodeEditor)).position.width / 2, EditorWindow.GetWindow(typeof(NodeEditor)).position.height * 0.95f);
@@ -41,15 +40,25 @@ public class NodeEditor : EditorWindow
         //offset of the last array element, i.e. the rightmost rect
         Vector2 maxOffset = Offset(new Vector2(0.4f * (angles.Count-1), 0.4f));
         Vector2 change = new Vector2(0.5f * (maxOffset.x - origin.x), 200);
-        for (int i = 0; i < angles.Count; i++)
+
+        foreach (int angle in angles)
         {
-            for (int j = 0; j < depths.Count; j++)
+            foreach (float depth in depths)
             {
-                Vector2 nodePos = new Vector2(positions[i, j].x, positions[i, j].z);
+                Vector3 target;
+                //create point along Z axis
+                target = new Vector3(0, 0, depth);
+                //rotate point by angle about Y axis
+                target = Quaternion.AngleAxis(angle, new Vector3(0, 1, 0)) * target;
+
+                Vector2 nodePos = new Vector2(target.x, target.z);
+
+                int i = angles.IndexOf(angle);
+                int j = depths.IndexOf(depth);
                 Vector2 nodePosOrth = new Vector2(0.4f * i, 0.4f * j);
 
                 //                                v---- rect will be transformed for display but coordinates remain original
-                Node tempNode = new Node(positions[i, j], Offset(nodePos), Offset(nodePosOrth) - change, nodeWidth, nodeHeight, nodeStyle);
+                Node tempNode = new Node(target, Offset(nodePos), Offset(nodePosOrth) - change, nodeWidth, nodeHeight, nodeStyle, angle, depth);
                 nodes.Add(tempNode);
             }
         }
@@ -70,27 +79,27 @@ public class NodeEditor : EditorWindow
         EditorWindow.GetWindow(typeof(NodeEditor)).Show();
     }
 
-    public static Vector3[,] GeneratePositions(List<int> angles, List<float> depths)
-    {
-        Vector3[,] positions = new Vector3[angles.Count, depths.Count];
+    //public static Vector3[,] GeneratePositions(List<int> angles, List<float> depths)
+    //{
+    //    Vector3[,] positions = new Vector3[angles.Count, depths.Count];
 
-        //generate positions by looping through distance and depth arrays.
-        foreach (int angle in angles)
-        {
-            foreach (float depth in depths)
-            {
-                Vector3 target;
-                //create point along Z axis
-                target = new Vector3(0, 0, depth);
-                //rotate point by angle about Y axis
-                target = Quaternion.AngleAxis(angle, new Vector3(0, 1, 0)) * target;
-                //put vector in correct position in 2D array
-                positions[angles.IndexOf(angle), depths.IndexOf(depth)] = target;
-            }
-        }
-        Debug.Log("Positions Generated: " + positions.Length);
-        return positions;
-    }
+    //    //generate positions by looping through distance and depth arrays.
+    //    foreach (int angle in angles)
+    //    {
+    //        foreach (float depth in depths)
+    //        {
+    //            Vector3 target;
+    //            //create point along Z axis
+    //            target = new Vector3(0, 0, depth);
+    //            //rotate point by angle about Y axis
+    //            target = Quaternion.AngleAxis(angle, new Vector3(0, 1, 0)) * target;
+    //            //put vector in correct position in 2D array
+    //            positions[angles.IndexOf(angle), depths.IndexOf(depth)] = target;
+    //        }
+    //    }
+    //    Debug.Log("Positions Generated: " + positions.Length);
+    //    return positions;
+    //}
 
 
     void OnGUI()
@@ -145,8 +154,7 @@ public class NodeEditor : EditorWindow
         Trial[] trials = new Trial[connections.Count];
         for (int i = 0; i < connections.Count; i++)
         {
-            //TODO: Fix this to also save eccentricity
-            trials[i] = new Trial(connections[i].From.coordinates, connections[i].To.coordinates);
+            trials[i] = new Trial(connections[i].From.depth, connections[i].To.depth, connections[i].From.angle, connections[i].To.angle);
         }
         string json = JsonHelper.ToJson(trials, true);
         File.WriteAllText(Application.dataPath + "/../" + fileName + ".json", json);

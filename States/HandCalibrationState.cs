@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class HandCalibrationState : ExperimentState
 {
+    public TrainingDockingState trainingDockingstate;
+    public DockingState dockingState;
+
     public String[] introTextArray;
     short textIndex = 0;
     public Text textPane;
@@ -25,7 +28,9 @@ public class HandCalibrationState : ExperimentState
 
     protected override void triggerPressed()
     {
-        armLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
+        float tempLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
+        trainingDockingstate.armLength = tempLength;
+        dockingState.armLength = tempLength;
         Debug.Log("Arm Length :" + armLength);
         advanceState();
     }

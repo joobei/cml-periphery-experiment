@@ -10,6 +10,8 @@ public class DockingState : ExperimentState
 
     Trial currentTrial;
     private List<Trial> trials;
+    private List<Trial> deferredTrials;
+
     //TrialNico currentTrial;
     //private List<TrialNico> trials;
     private DockingStateType dockingStateType = DockingStateType.toStart;
@@ -45,45 +47,46 @@ public class DockingState : ExperimentState
     {
         base.OnEnable(); //do parent class enable stuff
 
+        deferredTrials = new List<Trial>();
+
         string json = System.IO.File.ReadAllText(Application.dataPath + "/../Trials.json");
         trials = new List<Trial>(JsonHelper.FromJson<Trial>(json));
+        Debug.Log("Loaded " + trials.Count + " trials.");
 
-        foreach (Trial trial in trials)
-        {
-            trial.transferFunction = Transferfunction.closed;
-            Debug.Log("trial " + trials.IndexOf(trial) + ": " + trial);
+        //generate positions
+        foreach (Trial trial in trials) { 
+            Vector3 tempVector;
+
+            //create point along Z axis
+            tempVector = new Vector3(0, 0, trial.startDepth*armLength);
+            //rotate point by angle about Y axis
+            tempVector = Quaternion.AngleAxis(trial.startAngle, new Vector3(0, 1, 0)) * tempVector;
+            trial.start = tempVector;
+
+            //create point along Z axis
+            tempVector = new Vector3(0, 0, trial.endDepth*armLength);
+            //rotate point by angle about Y axis
+            tempVector = Quaternion.AngleAxis(trial.endAngle, new Vector3(0, 1, 0)) * tempVector;
+            trial.end = tempVector;
         }
 
-        //HACK to duplicate list of trials through another temporary list
 
-        List<Trial> tempList = new List<Trial>();
-
-        foreach (Trial trial in trials)
-        {
-            Trial tempTrial = new Trial(trial);
-            tempTrial.transferFunction = Transferfunction.open;
-            tempList.Add(tempTrial);
-        }
-
-        foreach (Trial trial in tempList)
-        {
-            trials.Add(trial);
-        }
-        //END HACK
-
+        ////HACK to duplicate list of trials through another temporary list
+        //List<Trial> tempList = new List<Trial>();
+        //foreach (Trial trial in trials)
+        //{
+        //    Trial tempTrial = new Trial(trial);
+        //    tempTrial.transferFunction = Transferfunction.open;
+        //    tempList.Add(tempTrial);
+        //}
+        //foreach (Trial trial in tempList)
+        //{
+        //    trials.Add(trial);
+        //}
+        ////END HACK
 
         Util.Shuffle(trials);
         
-        //scale Z by arm length
-        if (armLength != 0)
-        {
-            foreach (Trial trial in trials)
-            {
-                trial.start.z *= armLength;
-                trial.end.z *= armLength;
-            }
-        }
-
         dockingStateType = DockingStateType.toStart;
         currentTrial = trials[0];
         
@@ -126,7 +129,14 @@ public class DockingState : ExperimentState
             case DockingStateType.toEnd:
                 playSound("Error");
                 dockingStateType = DockingStateType.toStart;
-                target.transform.localPosition = currentTrial.start;
+
+                //save it for later if they failed because of
+                //saccade allows them to remember position
+                deferredTrials.Add(currentTrial);
+                Shuffle(deferredTrials);
+
+                //Fetch new one
+                advance();
                 break;
         }
         cursor.GetComponent<MeshRenderer>().enabled = true;
@@ -156,13 +166,17 @@ public class DockingState : ExperimentState
                 break;
             case DockingStateType.toEnd:
                 playSound("toot");
-                if (trials.Count > 0)
+                if (trials.Count ==0 && deferredTrials.Count == 0)
                 {
-                    currentTrial = trials[0];
-                   
-                    trials.RemoveAt(0);
+                    advanceState();
 
-                    Debug.Log("Advanced, remaining : " + trials.Count);
+                }
+                if (trials.Count == 0 && deferredTrials.Count>0)
+                {
+                    currentTrial = deferredTrials[0];
+                    deferredTrials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count + deferredTrials.Count);
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;
@@ -170,14 +184,20 @@ public class DockingState : ExperimentState
                     cursor.GetComponent<MeshRenderer>().enabled = true;
                     trialCount++;
                 }
-                else
+                if (trials.Count > 0)
                 {
-                    using (StreamWriter sw = File.AppendText(logPath))
-                    {
-                        sw.Close();
-                    }
-                    advanceState();
+                    currentTrial = trials[0];
+                    trials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count+deferredTrials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
+                    cursor.GetComponent<MeshRenderer>().enabled = true;
+                    trialCount++;
                 }
+                
                 break;
         }
 
@@ -195,19 +215,19 @@ public class DockingState : ExperimentState
         Vector3 cursorPos = rightController.transform.localPosition + cursor.transform.localPosition;
         rightController.transform.SetParent(rightCtrlParent);
 
-        float currentTargetAngle;
+        int currentTargetAngle;
+        float currentTargetDepth;
+
         if (dockingStateType == DockingStateType.toStart)
         {
-            currentTargetAngle = Vector3.SignedAngle(new Vector3(0, 0, 0.5f), currentTrial.start,new Vector3(0,1,0));
-            Debug.Log("Angle :" + currentTargetAngle);
+            currentTargetAngle = currentTrial.startAngle;
+            currentTargetDepth = currentTrial.startDepth;
         }
         else
         {
-            currentTargetAngle = Vector3.SignedAngle(new Vector3(0, 0, 0.5f), currentTrial.end, new Vector3(0, 1, 0));
-            Debug.Log("Angle :" + currentTargetAngle);
-
+            currentTargetAngle = currentTrial.endAngle;
+            currentTargetDepth = currentTrial.endDepth;
         }
-
 
         string line = "";
         line += participant + ",";
@@ -218,9 +238,11 @@ public class DockingState : ExperimentState
         line += cursorPos.y.ToString("F4") + ",";
         line += cursorPos.z.ToString("F4") + ",";
         line += targetPos.x.ToString("F4") + ",";
+        line += targetPos.y.ToString("F4") + ",";
         line += targetPos.z.ToString("F4") + ",";
         line += currentTrial.transferFunction.ToString()+",";
-        line += (int)currentTargetAngle + ",";
+        line += currentTargetAngle + ",";
+        line += currentTargetDepth + ",";
         line += dockingStateType.ToString();
 
         using (StreamWriter sw = File.AppendText(logPath))

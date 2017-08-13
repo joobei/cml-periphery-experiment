@@ -19,8 +19,7 @@ public class TrainingDockingState : ExperimentState
 
     public GameObject target, rightController, cursor;
 
-    string logPath;
-    int trialCount = 1;
+    int trialCount = 10;
     float timeLast;
 
     protected override void triggerPressed()
@@ -131,22 +130,22 @@ public class TrainingDockingState : ExperimentState
                 break;
             case DockingStateType.toEnd:
                 playSound("toot");
-                if (trials.Count > 10)
+                if (trialCount > 0)
                 {
                     currentTrial = trials[0];
-                   
                     trials.RemoveAt(0);
+                    trialCount--;
 
-                    Debug.Log("Advanced, remaining : " + trials.Count);
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;
                     dockingStateType = DockingStateType.toStart;
                     cursor.GetComponent<MeshRenderer>().enabled = true;
-                    trialCount++;
                 }
                 else
                 {
+                    //enable renderer in preparation for docking state.
+                    cursor.GetComponent<MeshRenderer>().enabled = true;
                     advanceState();
                 }
                 break;

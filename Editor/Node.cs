@@ -10,17 +10,21 @@ public class Node
     Rect rectStd;
     Rect rectOrth;
     public Vector3 coordinates;
+    public int angle;
+    public float depth;
     
 	public string title;
 	public GUIStyle style;
 	public bool isDragged;
 
-	public Node(Vector3 coordinates, Vector2 rectPosition, Vector2 rectPositionOrth, float width, float height, GUIStyle nodeStyle)
+	public Node(Vector3 coordinates, Vector2 rectPosition, Vector2 rectPositionOrth, float width, float height, GUIStyle nodeStyle, int angle, float depth)
 	{
         rect = rectStd = new Rect(rectPosition.x, rectPosition.y, width, height);
         this.coordinates = coordinates;
         rectOrth = new Rect(rectPositionOrth.x, rectPositionOrth.y, width, height);
         style = nodeStyle;
+        this.angle = angle;
+        this.depth = depth;
 	}
 
 	public void Drag(Vector2 delta)

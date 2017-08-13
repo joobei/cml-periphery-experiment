@@ -11,7 +11,7 @@ public abstract class ExperimentState : MonoBehaviour
 
     public ExperimentState nextState;
 
-    protected float armLength;
+    public float armLength;
 
     protected String stateName;
 
