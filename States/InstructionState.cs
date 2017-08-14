@@ -17,7 +17,7 @@ public class InstructionState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void triggerPressed()
+    protected override void mousePressed()
     {
         textIndex++;
         if (textIndex >= introTextArray.Length)
@@ -29,5 +29,10 @@ public class InstructionState : ExperimentState
         {
             textPane.text = introTextArray[textIndex];
         }
+    }
+
+    protected override void triggerPressed()
+    {
+        throw new NotImplementedException();
     }
 }

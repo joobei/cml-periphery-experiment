@@ -45,8 +45,14 @@ public class DockingState : ExperimentState
         //{
         //    advance();
         //}
-        //advance();
+        
         gazeTracker.calibrateFixation();
+    }
+
+    protected override void mousePressed()
+    {
+        base.mousePressed();
+        advance();
     }
 
     public override void OnEnable()
@@ -134,7 +140,7 @@ public class DockingState : ExperimentState
         base.Update();
         distance = Vector3.Distance(target.transform.position, cursor.transform.position);
 
-        if (!gazeTracker.checkEyeTrackingThreshold(0.1f) && enforceGaze && (Time.time - lastFailTime >= deltaTimeFailMin))
+        if (!gazeTracker.checkEyeTrackingThreshold(0.25f) && enforceGaze && (Time.time - lastFailTime >= deltaTimeFailMin))
         {
             lastFailTime = Time.time;
             resetTrial();

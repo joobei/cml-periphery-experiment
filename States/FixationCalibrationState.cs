@@ -14,11 +14,15 @@ public class FixationCalibrationState : ExperimentState
         
     }
 
-    protected override void triggerPressed()
+    protected override void mousePressed()
     {
         //Debug.Log("Arm Length: "+armLength.ToString());
         gazeTracker.calibrateFixation();
         advanceState();
     }
 
+    protected override void triggerPressed()
+    {
+        throw new NotImplementedException();
+    }
 }

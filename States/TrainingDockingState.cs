@@ -7,10 +7,15 @@ using System.IO;
 public class TrainingDockingState : ExperimentState
 {
 
+    public string participant;
+
     Trial currentTrial;
     private List<Trial> trials;
+    private List<Trial> deferredTrials;
 
-    DockingStateType dockingStateType = DockingStateType.toStart;
+    //TrialNico currentTrial;
+    //private List<TrialNico> trials;
+    private DockingStateType dockingStateType = DockingStateType.toStart;
     public PupilGazeTracker gazeTracker;
     public bool enforceGaze;
 
@@ -19,19 +24,38 @@ public class TrainingDockingState : ExperimentState
 
     public GameObject target, rightController, cursor;
 
-    int trialCount = 10;
+    string logPath;
+    string toStartString;
 
+    int trialCount = 1;
+    float timeLast;
+    float deltaTimeFailMin = 1f;
+    float lastFailTime;
 
     protected override void triggerPressed()
     {
-       
-        if (distance < 0.05f)
-            advance();
+        //only advance if we are within the threshold
+        //if in unity editor i.e. debug then use trigger
+        //if not only advance using click.
+        //if (Application.isEditor && (distance < 0.05f))
+        //{
+        //    advance();
+        //}
+        //advance();
+        gazeTracker.calibrateFixation();
+    }
+
+    protected override void mousePressed()
+    {
+        base.mousePressed();
+        advance();
     }
 
     public override void OnEnable()
     {
         base.OnEnable(); //do parent class enable stuff
+
+        deferredTrials = new List<Trial>();
 
         string json = System.IO.File.ReadAllText(Application.dataPath + "/../Trials.json");
         trials = new List<Trial>(JsonHelper.FromJson<Trial>(json));
@@ -70,102 +94,233 @@ public class TrainingDockingState : ExperimentState
         }
         //END HACK
 
-
-        Util.Shuffle(trials);
-        
-        //scale Z by arm length
-        if (armLength != 0)
+        tempList = new List<Trial>();
+        foreach (Trial trial in trials)
         {
-            foreach (Trial trial in trials)
-            {
-                trial.start.z *= armLength;
-                trial.end.z *= armLength;
-            }
+            Trial tempTrial = new Trial(trial);
+            tempList.Add(tempTrial);
+        }
+        foreach (Trial trial in tempList)
+        {
+            trials.Add(trial);
         }
 
+        Debug.Log("No of trials: " + trials.Count);
+
+        //tempList = new List<Trial>();
+
+        //Debug.Log("No of trials: " + trials.Count);
+
+        Util.Shuffle(trials);
+
         dockingStateType = DockingStateType.toStart;
-
         currentTrial = trials[0];
+
         trials.RemoveAt(0);
-
         target.transform.localPosition = currentTrial.start;
-
+        timeLast = Time.time;
     }
 
     protected override void Update()
     {
         base.Update();
-
         distance = Vector3.Distance(target.transform.position, cursor.transform.position);
 
-        if (!gazeTracker.checkEyeTrackingThreshold(0.1f) && timeRepeat < 0 && enforceGaze)
+        if (!gazeTracker.checkEyeTrackingThreshold(0.25f) && enforceGaze && (Time.time - lastFailTime >= deltaTimeFailMin))
         {
+            lastFailTime = Time.time;
             resetTrial();
         }
     }
 
     private void resetTrial()
     {
+
+
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
+                currentTrial.timesStartFailed++;
+                Debug.Log("currentTrial.timesStartFailed: " + currentTrial.timesStartFailed);
                 playSound("Error");
                 break;
             case DockingStateType.toEnd:
+                currentTrial.timesEndFailed++;
+                Debug.Log("currentTrial.timesEndFailed: " + currentTrial.timesEndFailed);
                 playSound("Error");
-                dockingStateType = DockingStateType.toStart;
-                target.transform.localPosition = currentTrial.start;
-                //target.transform.localPosition = currentTrial.translation.start;
-                break;
-        }
-    }
 
-    private void advance()
-    {
-        switch (dockingStateType)
-        {
-            case DockingStateType.toStart:
-                playSound("toot");
-                target.transform.localPosition = currentTrial.end;
-                //target.transform.localPosition = currentTrial.translation.end;
-                dockingStateType = DockingStateType.toEnd;
-                if (currentTrial.transferFunction == Transferfunction.open)
+
+                //save it for later if they failed because of
+                //saccade allows them to remember position
+
+                deferredTrials.Add(currentTrial);
+                deferredTrials.Shuffle();
+
+                //Fetch new one
+                if (trials.Count == 0 && deferredTrials.Count == 0)
                 {
-                    cursor.GetComponent<MeshRenderer>().enabled = false;
+                    advanceState();
+
                 }
-                else
+                if (trials.Count == 0 && deferredTrials.Count > 0)
                 {
-                    cursor.GetComponent<MeshRenderer>().enabled = true;
-                }
+                    currentTrial = deferredTrials[0];
+                    deferredTrials.RemoveAt(0);
 
-                break;
-            case DockingStateType.toEnd:
-                playSound("toot");
-                if (trialCount > 0)
-                {
-                    currentTrial = trials[0];
-                    trials.RemoveAt(0);
-                    trialCount--;
-
+                    Debug.Log("Advanced, remaining : " + trials.Count + deferredTrials.Count);
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;
                     dockingStateType = DockingStateType.toStart;
                     cursor.GetComponent<MeshRenderer>().enabled = true;
+                    //trialCount++;
                 }
-                else
+                if (trials.Count > 0)
                 {
-                    //enable renderer in preparation for docking state.
+                    currentTrial = trials[0];
+                    trials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count);
+                    Debug.Log("Deferred remaining : " + deferredTrials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
                     cursor.GetComponent<MeshRenderer>().enabled = true;
-                    advanceState();
+                    //trialCount++;
                 }
                 break;
         }
-
-       
+        cursor.GetComponent<MeshRenderer>().enabled = true;
+        timeLast = Time.time;
     }
 
-   
+    private void advance()
+    {
 
+        switch (dockingStateType)
+        {
+            case DockingStateType.toStart:
+
+                //Save log string but don't log it until later when trial is complete
+                toStartString = formLogLine();
+
+                if (distance < 0.05)
+                {
+                    playSound("toot");
+                    target.transform.localPosition = currentTrial.end;
+                    //target.transform.localPosition = currentTrial.translation.end;
+                    dockingStateType = DockingStateType.toEnd;
+                    if (currentTrial.transferFunction == Transferfunction.open)
+                    {
+                        cursor.GetComponent<MeshRenderer>().enabled = false;
+                    }
+                    else
+                    {
+                        cursor.GetComponent<MeshRenderer>().enabled = true;
+                    }
+
+                }
+                break;
+            case DockingStateType.toEnd:
+                playSound("toot");
    
+                if (trialCount < 10)
+                {
+                    currentTrial = trials[0];
+                    trials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count);
+                    Debug.Log("Deferred remaining : " + deferredTrials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
+                    cursor.GetComponent<MeshRenderer>().enabled = true;
+                    trialCount++;
+                }
+                else
+                {
+                    advanceState();
+                }
+
+                break;
+        }
+
+
+    }
+
+    private String formLogLine()
+    {
+        float deltaTime = Time.time - timeLast;
+        timeLast = Time.time;
+        Vector3 targetPos = target.transform.localPosition;
+
+        Transform rightCtrlParent = rightController.transform.parent;
+        rightController.transform.SetParent(target.transform.parent);
+        Vector3 cursorPos = rightController.transform.localPosition + cursor.transform.localPosition;
+        rightController.transform.SetParent(rightCtrlParent);
+
+        int currentTargetAngle;
+        float currentTargetDepth;
+
+        int timesFailed = 0;
+
+        if (dockingStateType == DockingStateType.toStart)
+        {
+            currentTargetAngle = currentTrial.startAngle;
+            currentTargetDepth = currentTrial.startDepth;
+            timesFailed = currentTrial.timesStartFailed;
+        }
+        else
+        {
+            currentTargetAngle = currentTrial.endAngle;
+            currentTargetDepth = currentTrial.endDepth;
+            timesFailed = currentTrial.timesEndFailed;
+        }
+
+        string line = "";
+        line += participant + ",";
+        line += trialCount + ",";
+        line += distance + ",";
+        line += deltaTime + ",";
+        line += cursorPos.x + ",";
+        line += cursorPos.y + ",";
+        line += cursorPos.z + ",";
+        line += targetPos.x + ",";
+        line += targetPos.y + ",";
+        line += targetPos.z + ",";
+        line += currentTrial.transferFunction.ToString() + ",";
+        line += currentTargetAngle + ",";
+        line += currentTargetDepth + ",";
+        line += dockingStateType.ToString() + ",";
+        line += timesFailed;
+        line += Environment.NewLine;
+
+        return line;
+
+    }
+
+    private void LogTrial()
+    {
+        //form the line from this trial (toEnd)
+        string line = formLogLine();
+
+        File.AppendAllText(logPath, toStartString);
+        File.AppendAllText(logPath, line);
+
+        //StreamWriter sw;
+        //using (sw = File.AppendText(logPath))
+        //{
+        //    //Log the start trial
+        //    sw.WriteLine(toStartString);
+        //    //Log the end trial
+        //    sw.WriteLine(line);
+        //}
+        //sw.Dispose();
+
+        //reset toStartString to gibberish so that we can debug
+        toStartString = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
+    }
+
 }

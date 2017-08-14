@@ -26,12 +26,17 @@ public class HandCalibrationState : ExperimentState
         textPane.text = introTextArray[textIndex];
     }
 
-    protected override void triggerPressed()
+    protected override void mousePressed()
     {
         float tempLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
         trainingDockingstate.armLength = tempLength;
         dockingState.armLength = tempLength;
         Debug.Log("Arm Length :" + armLength);
         advanceState();
+    }
+
+    protected override void triggerPressed()
+    {
+        throw new NotImplementedException();
     }
 }
