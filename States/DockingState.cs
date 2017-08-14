@@ -37,10 +37,11 @@ public class DockingState : ExperimentState
         //only advance if we are within the threshold
         //if in unity editor i.e. debug then use trigger
         //if not only advance using click.
-        if (Application.isEditor && (distance < 0.05f))
-        {
-            advance();
-        }
+        //if (Application.isEditor && (distance < 0.05f))
+        //{
+        //    advance();
+        //}
+        advance();
     }
 
     public override void OnEnable()
@@ -71,19 +72,36 @@ public class DockingState : ExperimentState
         }
 
 
-        ////HACK to duplicate list of trials through another temporary list
-        //List<Trial> tempList = new List<Trial>();
-        //foreach (Trial trial in trials)
-        //{
-        //    Trial tempTrial = new Trial(trial);
-        //    tempTrial.transferFunction = Transferfunction.open;
-        //    tempList.Add(tempTrial);
-        //}
-        //foreach (Trial trial in tempList)
-        //{
-        //    trials.Add(trial);
-        //}
-        ////END HACK
+        //HACK to duplicate list of trials through another temporary list
+        List<Trial> tempList = new List<Trial>();
+        foreach (Trial trial in trials)
+        {
+            Trial tempTrial = new Trial(trial);
+            tempTrial.transferFunction = Transferfunction.open;
+            tempList.Add(tempTrial);
+        }
+        foreach (Trial trial in tempList)
+        {
+            trials.Add(trial);
+        }
+        //END HACK
+
+        tempList = new List<Trial>();
+        foreach (Trial trial in trials)
+        {
+            Trial tempTrial = new Trial(trial);
+            tempList.Add(tempTrial);
+        }
+        foreach (Trial trial in tempList)
+        {
+            trials.Add(trial);
+        }
+
+        Debug.Log("No of trials: " + trials.Count);
+
+        //tempList = new List<Trial>();
+
+        //Debug.Log("No of trials: " + trials.Count);
 
         Util.Shuffle(trials);
         
@@ -124,16 +142,16 @@ public class DockingState : ExperimentState
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
-                playSound("Error");
-                break;
+                    playSound("Error");
+                    break;
             case DockingStateType.toEnd:
                 playSound("Error");
-                dockingStateType = DockingStateType.toStart;
 
                 //save it for later if they failed because of
                 //saccade allows them to remember position
+
                 deferredTrials.Add(currentTrial);
-                Shuffle(deferredTrials);
+                deferredTrials.Shuffle();
 
                 //Fetch new one
                 advance();
@@ -149,20 +167,22 @@ public class DockingState : ExperimentState
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
-
-                playSound("toot");
-                target.transform.localPosition = currentTrial.end;
-                //target.transform.localPosition = currentTrial.translation.end;
-                dockingStateType = DockingStateType.toEnd;
-                if (currentTrial.transferFunction == Transferfunction.open)
+                if (distance < 0.05)
                 {
-                    cursor.GetComponent<MeshRenderer>().enabled = false;
-                }
-                else
-                {
-                    cursor.GetComponent<MeshRenderer>().enabled = true;
-                }
+                    playSound("toot");
+                    target.transform.localPosition = currentTrial.end;
+                    //target.transform.localPosition = currentTrial.translation.end;
+                    dockingStateType = DockingStateType.toEnd;
+                    if (currentTrial.transferFunction == Transferfunction.open)
+                    {
+                        cursor.GetComponent<MeshRenderer>().enabled = false;
+                    }
+                    else
+                    {
+                        cursor.GetComponent<MeshRenderer>().enabled = true;
+                    }
 
+                }
                 break;
             case DockingStateType.toEnd:
                 playSound("toot");
@@ -189,7 +209,8 @@ public class DockingState : ExperimentState
                     currentTrial = trials[0];
                     trials.RemoveAt(0);
 
-                    Debug.Log("Advanced, remaining : " + trials.Count+deferredTrials.Count);
+                    Debug.Log("Advanced, remaining : " + trials.Count);
+                    Debug.Log("Deferred remaining : " + deferredTrials.Count);
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;

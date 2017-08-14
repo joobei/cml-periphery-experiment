@@ -20,7 +20,7 @@ public class TrainingDockingState : ExperimentState
     public GameObject target, rightController, cursor;
 
     int trialCount = 10;
-    float timeLast;
+
 
     protected override void triggerPressed()
     {
@@ -35,24 +35,35 @@ public class TrainingDockingState : ExperimentState
 
         string json = System.IO.File.ReadAllText(Application.dataPath + "/../Trials.json");
         trials = new List<Trial>(JsonHelper.FromJson<Trial>(json));
+        Debug.Log("Loaded " + trials.Count + " trials.");
 
+        //generate positions
         foreach (Trial trial in trials)
         {
-            trial.transferFunction = Transferfunction.closed;
-            Debug.Log("trial " + trials.IndexOf(trial) + ": " + trial);
+            Vector3 tempVector;
+
+            //create point along Z axis
+            tempVector = new Vector3(0, 0, trial.startDepth * armLength);
+            //rotate point by angle about Y axis
+            tempVector = Quaternion.AngleAxis(trial.startAngle, new Vector3(0, 1, 0)) * tempVector;
+            trial.start = tempVector;
+
+            //create point along Z axis
+            tempVector = new Vector3(0, 0, trial.endDepth * armLength);
+            //rotate point by angle about Y axis
+            tempVector = Quaternion.AngleAxis(trial.endAngle, new Vector3(0, 1, 0)) * tempVector;
+            trial.end = tempVector;
         }
 
+
         //HACK to duplicate list of trials through another temporary list
-
         List<Trial> tempList = new List<Trial>();
-
         foreach (Trial trial in trials)
         {
             Trial tempTrial = new Trial(trial);
             tempTrial.transferFunction = Transferfunction.open;
             tempList.Add(tempTrial);
         }
-
         foreach (Trial trial in tempList)
         {
             trials.Add(trial);
@@ -78,7 +89,7 @@ public class TrainingDockingState : ExperimentState
         trials.RemoveAt(0);
 
         target.transform.localPosition = currentTrial.start;
-        timeLast = Time.time;
+
     }
 
     protected override void Update()
