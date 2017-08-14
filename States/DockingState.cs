@@ -112,16 +112,16 @@ public class DockingState : ExperimentState
         target.transform.localPosition = currentTrial.start;
         timeLast = Time.time;
 
-        string line = ""; //blank line (if file already exists)
         logPath = Application.dataPath + "/../log.csv";
-        if (!File.Exists(logPath)) //write header
-            line = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8},{9}",
-                "trial_number", "time_in_milliseconds", "cursor.x", "cursor.y",
-                "cursor.z", "target.x", "target.y", "target.z", "state");
-        using (StreamWriter sw = File.AppendText(logPath))
-        {
-            sw.WriteLine(line);
-        }
+        //string line = ""; //blank line (if file already exists)
+        //if (!File.Exists(logPath)) //write header
+        //    line = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8},{9}",
+        //        "trial_number", "time_in_milliseconds", "cursor.x", "cursor.y",
+        //        "cursor.z", "target.x", "target.y", "target.z", "state");
+        //using (StreamWriter sw = File.AppendText(logPath))
+        //{
+        //    sw.WriteLine(line);
+        //}
     }
 
     protected override void Update()
