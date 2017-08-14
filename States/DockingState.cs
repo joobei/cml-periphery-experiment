@@ -24,8 +24,12 @@ public class DockingState : ExperimentState
     public GameObject target, rightController, cursor;
 
     string logPath;
+    string toStartString;
+
     int trialCount = 1;
     float timeLast;
+    float deltaTimeFailMin = 1f;
+    float lastFailTime;
 
     public DockingState()
     {
@@ -41,7 +45,8 @@ public class DockingState : ExperimentState
         //{
         //    advance();
         //}
-        advance();
+        //advance();
+        gazeTracker.calibrateFixation();
     }
 
     public override void OnEnable()
@@ -129,23 +134,29 @@ public class DockingState : ExperimentState
         base.Update();
         distance = Vector3.Distance(target.transform.position, cursor.transform.position);
 
-        if (!gazeTracker.checkEyeTrackingThreshold(0.1f) && timeRepeat < 0 && enforceGaze)
+        if (!gazeTracker.checkEyeTrackingThreshold(0.1f) && enforceGaze && (Time.time - lastFailTime >= deltaTimeFailMin))
         {
+            lastFailTime = Time.time;
             resetTrial();
         }
-
-        
     }
 
     private void resetTrial()
     {
+        
+        
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
-                    playSound("Error");
-                    break;
-            case DockingStateType.toEnd:
+                currentTrial.timesStartFailed++;
+                Debug.Log("currentTrial.timesStartFailed: " + currentTrial.timesStartFailed);
                 playSound("Error");
+                break;
+            case DockingStateType.toEnd:
+                currentTrial.timesEndFailed++;
+                Debug.Log("currentTrial.timesEndFailed: " + currentTrial.timesEndFailed);
+                playSound("Error");
+
 
                 //save it for later if they failed because of
                 //saccade allows them to remember position
@@ -154,7 +165,38 @@ public class DockingState : ExperimentState
                 deferredTrials.Shuffle();
 
                 //Fetch new one
-                advance();
+                if (trials.Count == 0 && deferredTrials.Count == 0)
+                {
+                    advanceState();
+
+                }
+                if (trials.Count == 0 && deferredTrials.Count > 0)
+                {
+                    currentTrial = deferredTrials[0];
+                    deferredTrials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count + deferredTrials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
+                    cursor.GetComponent<MeshRenderer>().enabled = true;
+                    //trialCount++;
+                }
+                if (trials.Count > 0)
+                {
+                    currentTrial = trials[0];
+                    trials.RemoveAt(0);
+
+                    Debug.Log("Advanced, remaining : " + trials.Count);
+                    Debug.Log("Deferred remaining : " + deferredTrials.Count);
+                    //move target to new position
+                    target.transform.localPosition = currentTrial.start;
+                    //target.transform.localPosition = currentTrial.translation.start;
+                    dockingStateType = DockingStateType.toStart;
+                    cursor.GetComponent<MeshRenderer>().enabled = true;
+                    //trialCount++;
+                }
                 break;
         }
         cursor.GetComponent<MeshRenderer>().enabled = true;
@@ -163,10 +205,14 @@ public class DockingState : ExperimentState
 
     private void advance()
     {
-        LogTrial();
+        
         switch (dockingStateType)
         {
             case DockingStateType.toStart:
+                
+                //Save log string but don't log it until later when trial is complete
+                toStartString = formLogLine();
+
                 if (distance < 0.05)
                 {
                     playSound("toot");
@@ -185,6 +231,7 @@ public class DockingState : ExperimentState
                 }
                 break;
             case DockingStateType.toEnd:
+                LogTrial();
                 playSound("toot");
                 if (trials.Count ==0 && deferredTrials.Count == 0)
                 {
@@ -225,7 +272,7 @@ public class DockingState : ExperimentState
        
     }
 
-    private void LogTrial()
+    private String formLogLine()
     {
         float deltaTime = Time.time - timeLast;
         timeLast = Time.time;
@@ -239,15 +286,19 @@ public class DockingState : ExperimentState
         int currentTargetAngle;
         float currentTargetDepth;
 
+        int timesFailed = 0;
+
         if (dockingStateType == DockingStateType.toStart)
         {
             currentTargetAngle = currentTrial.startAngle;
             currentTargetDepth = currentTrial.startDepth;
+            timesFailed = currentTrial.timesStartFailed;
         }
         else
         {
             currentTargetAngle = currentTrial.endAngle;
             currentTargetDepth = currentTrial.endDepth;
+            timesFailed = currentTrial.timesEndFailed;
         }
 
         string line = "";
@@ -255,21 +306,43 @@ public class DockingState : ExperimentState
         line += trialCount + ",";
         line += distance + ",";
         line += deltaTime + ",";
-        line += cursorPos.x.ToString("F4") + ",";
-        line += cursorPos.y.ToString("F4") + ",";
-        line += cursorPos.z.ToString("F4") + ",";
-        line += targetPos.x.ToString("F4") + ",";
-        line += targetPos.y.ToString("F4") + ",";
-        line += targetPos.z.ToString("F4") + ",";
-        line += currentTrial.transferFunction.ToString()+",";
+        line += cursorPos.x + ",";
+        line += cursorPos.y + ",";
+        line += cursorPos.z + ",";
+        line += targetPos.x + ",";
+        line += targetPos.y + ",";
+        line += targetPos.z + ",";
+        line += currentTrial.transferFunction.ToString() + ",";
         line += currentTargetAngle + ",";
         line += currentTargetDepth + ",";
-        line += dockingStateType.ToString();
+        line += dockingStateType.ToString() +",";
+        line += timesFailed;
+        line += Environment.NewLine;
 
-        using (StreamWriter sw = File.AppendText(logPath))
-        {
-            sw.WriteLine(line);
-        }
+        return line;
+
+    }
+
+    private void LogTrial()
+    {
+        //form the line from this trial (toEnd)
+        string line = formLogLine();
+
+        File.AppendAllText(logPath, toStartString);
+        File.AppendAllText(logPath, line);
+
+        //StreamWriter sw;
+        //using (sw = File.AppendText(logPath))
+        //{
+        //    //Log the start trial
+        //    sw.WriteLine(toStartString);
+        //    //Log the end trial
+        //    sw.WriteLine(line);
+        //}
+        //sw.Dispose();
+        
+        //reset toStartString to gibberish so that we can debug
+        toStartString = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
     }
 
    

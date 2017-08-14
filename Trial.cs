@@ -8,6 +8,8 @@ public class Trial
     public Vector3 start;
     public Vector3 end;
     public int startAngle, endAngle;
+    public int timesStartFailed = 0;
+    public int timesEndFailed = 0;
 
     public Transferfunction transferFunction;
     public float startDepth, endDepth;
