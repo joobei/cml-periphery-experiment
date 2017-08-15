@@ -58,6 +58,11 @@ public abstract class ExperimentState : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) { mousePressed(); }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            
+        }
     }
 
     protected virtual void mousePressed()

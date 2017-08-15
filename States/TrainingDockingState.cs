@@ -230,8 +230,7 @@ public class TrainingDockingState : ExperimentState
                     currentTrial = trials[0];
                     trials.RemoveAt(0);
 
-                    Debug.Log("Advanced, remaining : " + trials.Count);
-                    Debug.Log("Deferred remaining : " + deferredTrials.Count);
+                    Debug.Log("Remaining : " + ((int)10-trialCount));
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;
