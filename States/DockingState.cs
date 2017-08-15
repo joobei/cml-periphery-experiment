@@ -238,18 +238,19 @@ public class DockingState : ExperimentState
                 break;
             case DockingStateType.toEnd:
                 LogTrial();
-                playSound("toot");
+                
                 if (trials.Count ==0 && deferredTrials.Count == 0)
                 {
+                    playSound("ExperimentEnd");
                     advanceState();
-
                 }
                 if (trials.Count == 0 && deferredTrials.Count>0)
                 {
+                    playSound("2toot");
                     currentTrial = deferredTrials[0];
                     deferredTrials.RemoveAt(0);
 
-                    Debug.Log("Advanced, remaining : " + trials.Count + deferredTrials.Count);
+                    Debug.Log("Deferred Remaining : " + trials.Count + deferredTrials.Count);
                     //move target to new position
                     target.transform.localPosition = currentTrial.start;
                     //target.transform.localPosition = currentTrial.translation.start;
@@ -259,6 +260,7 @@ public class DockingState : ExperimentState
                 }
                 if (trials.Count > 0)
                 {
+                    playSound("2toot");
                     currentTrial = trials[0];
                     trials.RemoveAt(0);
 

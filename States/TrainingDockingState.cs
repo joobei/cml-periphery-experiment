@@ -223,7 +223,7 @@ public class TrainingDockingState : ExperimentState
                 }
                 break;
             case DockingStateType.toEnd:
-                playSound("toot");
+                playSound("2toot");
    
                 if (trialCount < 10)
                 {

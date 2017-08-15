@@ -31,7 +31,7 @@ public class HandCalibrationState : ExperimentState
         float tempLength = Vector3.Distance(cursor.transform.position, hmd.transform.position);
         trainingDockingstate.armLength = tempLength;
         dockingState.armLength = tempLength;
-        Debug.Log("Arm Length :" + armLength);
+        Debug.Log("Arm Length :" + tempLength);
         advanceState();
     }
 
