@@ -1,0 +1,650 @@
+{
+    "Items": [
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 20,
+            "endAngle": 20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 20,
+            "endAngle": 20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -20,
+            "endAngle": -20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -20,
+            "endAngle": -20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": -20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -20,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": -20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -20,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": -20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -20,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": -10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": -10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 20,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.8539999723434448,
+            "endDepth": 0.8539999723434448
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 20,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.6179999709129334,
+            "endDepth": 0.6179999709129334
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 0,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 0,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 10,
+            "endAngle": 20,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        },
+        {
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "end": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "startAngle": 20,
+            "endAngle": 10,
+            "timesStartFailed": 0,
+            "timesEndFailed": 0,
+            "transferFunction": 1,
+            "startDepth": 0.38199999928474429,
+            "endDepth": 0.38199999928474429
+        }
+    ]
+}
