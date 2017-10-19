@@ -11,10 +11,10 @@ public class DualShapeContactMod : HapticClassScript {
     //Workspace Update Value
     float[] workspaceUpdateValue = new float[2];
 
-    private Vector3 referencePointCursorLeft;
-    private Vector3 referencePointCursorRight;
+    private Vector3 referencePosCursorLeft;
+    private Vector3 referencePosCursorRight;
     private float lastTime;
-    private bool isStartPosCalibrated = false;
+    private bool areStartPosCalibrated = false;
 
     /*****************************************************************************/
 
@@ -127,9 +127,19 @@ public class DualShapeContactMod : HapticClassScript {
         hapticCursor.transform.RotateAround(new Vector3(myWorkSpacePosition[0], myWorkSpacePosition[1], myWorkSpacePosition[2]), Vector3.up, -90f);
         secondHapticCursor.transform.RotateAround(new Vector3(mySecondWorkSpacePosition[0], mySecondWorkSpacePosition[1], mySecondWorkSpacePosition[2]), Vector3.up, 90f);
 
-        if (!isStartPosCalibrated && Time.time >= 1f)
-            CalibrateStartPositions();
-        DebugCursorPositions(1);
+        if (!areStartPosCalibrated && Time.time >= 1f)
+        {
+            CalibrateCursorPositions(true, true); //set start positions
+            areStartPosCalibrated = true;
+            Debug.Log("Start pos calibrated");
+        }
+
+        if (areStartPosCalibrated && Time.time - lastTime > 0.75)
+        {
+            CalibrateCursorPositions(PluginImport.GetButtonState(1, 2), PluginImport.GetButtonState(2, 2));
+            PrintCursorPositionDelta();
+            lastTime = Time.time;
+        }
 
         //myGenericFunctionsClassScript.GetTouchedObject();
 
@@ -145,38 +155,42 @@ public class DualShapeContactMod : HapticClassScript {
 
     }
 
-    //Calibrate haptic cursor start positions
-    private void CalibrateStartPositions()
+    //Calibrate haptic cursor positions
+    private void CalibrateCursorPositions(bool cursorLeft, bool cursorRight)
     {
-        referencePointCursorLeft = hapticCursor.transform.position;
-        referencePointCursorRight = secondHapticCursor.transform.position;
-        isStartPosCalibrated = true;
-        Debug.Log("Start pos calibrated");
-    }
-
-    //Debug haptic cursor position.g delta (g = 0, 1, or 2, i.e. x, y, or z)
-    private void DebugCursorPositions(int g)
-    {
-        if (isStartPosCalibrated && Time.time - lastTime > 0.75)
+        if (cursorLeft)
         {
-            bool buttonPressed = PluginImport.GetButtonState(2, 2);
-            if (buttonPressed)
-            {
-                referencePointCursorRight = secondHapticCursor.transform.position;
-                Debug.Log("Updated right cursor's reference point");
-            }
-
-            Debug.LogFormat("Time: {2}, delta(pos[{3}], refPoint[{3}]): cursor1: {0}, cursor2: {1}",
-                Mathf.Abs(hapticCursor.transform.position[g] - referencePointCursorLeft[g]).ToString("F2"),
-                Mathf.Abs(secondHapticCursor.transform.position[g] - referencePointCursorRight[g]).ToString("F2"),
-                Time.time.ToString("F1"), g);
-            //Debug.LogFormat("Time: {2}, delta(pos, refPoint): cursor1: {0}, cursor2: {1}",
-            //    Vector3.Distance(hapticCursor.transform.position, referencePointCursorLeft).ToString("F2"),
-            //    Vector3.Distance(secondHapticCursor.transform.position, referencePointCursorRight).ToString("F2"),
-            //    Time.time.ToString("F1"));
-            lastTime = Time.time;
+            referencePosCursorLeft = hapticCursor.transform.position;
+            Debug.Log("Updated left cursor's reference point");
+        }
+        if (cursorRight)
+        {
+            referencePosCursorRight = secondHapticCursor.transform.position;
+            Debug.Log("Updated right cursor's reference point");
         }
     }
+
+
+    /// <summary>
+    /// Print haptic cursors' transform.position.g delta from their reference position
+    /// </summary>
+    /// <param name="g"> 0, 1, or 2. (i.e. x, y, or z) </param>
+    private void PrintCursorPositionDelta(int g)
+    {
+        Debug.LogFormat("Time: {2}, delta(pos[{3}], refPoint[{3}]): cursor1: {0}, cursor2: {1}",
+            /*Mathf.Abs*/(hapticCursor.transform.position[g] - referencePosCursorLeft[g]).ToString("F2"),
+            /*Mathf.Abs*/(secondHapticCursor.transform.position[g] - referencePosCursorRight[g]).ToString("F2"),
+            Time.time.ToString("F1"), g);
+    }
+
+    private void PrintCursorPositionDelta()
+    {
+        float delta1 = Vector3.Distance(hapticCursor.transform.position, referencePosCursorLeft) / 0.69f;
+        float delta2 = Vector3.Distance(secondHapticCursor.transform.position, referencePosCursorRight) / 0.69f;
+        Debug.LogFormat("Time: {2}, delta(pos, refPoint): cursor1: {0}, cursor2: {1}",
+            delta1.ToString("F2"), delta2.ToString("F2"), Time.time.ToString("F1"));
+    }
+
 
     void OnDisable()
     {
