@@ -12,7 +12,9 @@ public class SimpleShapeContactMod : HapticClassScript {
     //Workspace Update Value
     float[] workspaceUpdateValue = new float[1];
 
-    public GameObject hapticTip;
+    public GameObject hapticCursorTip;
+    private GameObject debugCursor;
+    private string jointOrTip;
     private Vector3 referencePosCursor;
     private float lastTime;
     private bool isStartPosCalibrated = false;
@@ -54,8 +56,20 @@ public class SimpleShapeContactMod : HapticClassScript {
 
 			//Set the touchable face(s)
 			PluginImport.SetTouchableFace(ConverterClass.ConvertStringToByteToIntPtr(TouchableFace));
-			
-		}
+    
+            //If supplied, we want to use debug the position of the tip instead of the center of the stylus joint
+            if (hapticCursorTip != null)
+            {
+                debugCursor = hapticCursorTip;
+                jointOrTip = " tip";
+                Debug.Log("Tip game object supplied; going to use tip of haptic cursor");
+            }
+            else
+            {
+                debugCursor = hapticCursor;
+                jointOrTip = "";
+            }
+        }
 		else
 			Debug.Log("Haptic Device cannot be launched");
 
@@ -117,8 +131,7 @@ public class SimpleShapeContactMod : HapticClassScript {
     {
         if (buttonPressed)
         {
-            referencePosCursor = hapticCursor.transform.position;
-            //referencePosCursor = hapticTip.transform.position;
+            referencePosCursor = debugCursor.transform.position;
             Debug.Log("Updated cursor's reference pos");
         }
     }
@@ -130,10 +143,8 @@ public class SimpleShapeContactMod : HapticClassScript {
     /// <param name="g"> 0, 1, or 2. (i.e. x, y, or z) </param>
     private void PrintCursorPositionDelta(int g)
     {
-        Debug.LogFormat("Time: {0}, cursor delta(pos[{1}], refPoint[{1}]): {2}", Time.time.ToString("F1"), g,
-            /*Mathf.Abs*/(hapticCursor.transform.position[g] - referencePosCursor[g]).ToString("F2")
-            ///*Mathf.Abs*/(hapticTip.transform.position[g] - referencePosCursorLeft[g]).ToString("F2")
-            );
+        Debug.LogFormat("Time: {0}, cursor{1} delta(pos[{2}], refPoint[{2}]): {3}", Time.time.ToString("F1"),
+            jointOrTip, g, /*Mathf.Abs*/(debugCursor.transform.position[g] - referencePosCursor[g]).ToString("F2"));
     }
 
     private void PrintCursorPositionDelta()
@@ -141,9 +152,8 @@ public class SimpleShapeContactMod : HapticClassScript {
         //TODO Calculate / calibrate scale factor
         //Also: Later, incorporate scaling factor in the workspace dimensions and don't apply it here anymore
         float scaleFactor = 0.69f;
-        float deltaCursor = Vector3.Distance(hapticCursor.transform.position, referencePosCursor) / scaleFactor;
-        //float deltaCursor = Vector3.Distance(hapticTip.transform.position, referencePosCursor) / scaleFactor;
-        Debug.LogFormat("Time: {0}, cursor delta(pos, refPoint): {1}", Time.time.ToString("F1"), deltaCursor.ToString("F2"));
+        float cursorDelta = Vector3.Distance(debugCursor.transform.position, referencePosCursor) / scaleFactor;
+        Debug.LogFormat("Time: {0}, cursor{1} delta(pos, refPoint): {2}", Time.time.ToString("F1"), jointOrTip, cursorDelta.ToString("F2"));
     }
 
     void OnDisable()
@@ -151,7 +161,7 @@ public class SimpleShapeContactMod : HapticClassScript {
 		if (PluginImport.HapticCleanUp())
 		{
 			Debug.Log("Haptic Context CleanUp");
-			Debug.Log("Desactivate Device");
+			Debug.Log("Deactivate Device");
 			Debug.Log("OpenGL Context CleanUp");
 		}
 	}
