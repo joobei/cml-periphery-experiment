@@ -291,7 +291,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 260410587}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.4}
+  m_LocalPosition: {x: 0, y: 0, z: 0.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1774286863}
@@ -307,6 +307,7 @@ GameObject:
   - component: {fileID: 375015659}
   - component: {fileID: 375015660}
   - component: {fileID: 375015658}
+  - component: {fileID: 375015662}
   - component: {fileID: 375015661}
   m_Layer: 0
   m_Name: dummy
@@ -329,7 +330,7 @@ MonoBehaviour:
   HapticMode: 
   ModeIndex: 0
   TouchableFace: 
-  device1Name: omni612-000
+  device1Name: omni612-010
   myHapticCamera: {fileID: 1510373204}
   workSpaceObj: {fileID: 161658456}
   hapticCursor: {fileID: 1774286859}
@@ -338,9 +339,9 @@ MonoBehaviour:
   - 0.5
   - 0.5
   myWorkSpaceSize:
-  - 2
-  - 1.417
-  - 1
+  - 2.899
+  - 2.054
+  - 1.449
   device2Name: 
   mySecondHapticCamera: {fileID: 0}
   secondWorkSpaceObj: {fileID: 0}
@@ -354,7 +355,7 @@ MonoBehaviour:
   - 0
   - 0
   maxPenetration: 0
-  hapticCursorTip: {fileID: 0}
+  hapticCursorTip: {fileID: 260410587}
 --- !u!4 &375015659
 Transform:
   m_ObjectHideFlags: 0
@@ -405,6 +406,45 @@ MonoBehaviour:
   - 0
   - -1
   - 0
+--- !u!114 &375015662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 375015657}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dc793216251834692b1bc55c920df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HapticMode: 
+  ModeIndex: 0
+  TouchableFace: 
+  device1Name: omni612-010
+  myHapticCamera: {fileID: 1510373204}
+  workSpaceObj: {fileID: 161658456}
+  hapticCursor: {fileID: 1774286859}
+  myWorkSpacePosition:
+  - -0.5
+  - 0.5
+  - 0.5
+  myWorkSpaceSize:
+  - 2
+  - 1.417
+  - 1
+  device2Name: 
+  mySecondHapticCamera: {fileID: 0}
+  secondWorkSpaceObj: {fileID: 0}
+  secondHapticCursor: {fileID: 0}
+  mySecondWorkSpacePosition:
+  - 0
+  - 0
+  - 0
+  mySecondWorkSpaceSize:
+  - 0
+  - 0
+  - 0
+  maxPenetration: 0
 --- !u!1 &1510373204
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,9 +13,9 @@ public class SimpleShapeContactMod : HapticClassScript {
     float[] workspaceUpdateValue = new float[1];
 
     public GameObject hapticCursorTip;
-    private GameObject debugCursor;
+    private GameObject debugObject;
     private string jointOrTip;
-    private Vector3 referencePosCursor;
+    private Vector3 referencePos;
     private float lastTime;
     private bool isStartPosCalibrated = false;
 
@@ -60,13 +60,13 @@ public class SimpleShapeContactMod : HapticClassScript {
             //If supplied, we want to use debug the position of the tip instead of the center of the stylus joint
             if (hapticCursorTip != null)
             {
-                debugCursor = hapticCursorTip;
+                debugObject = hapticCursorTip;
                 jointOrTip = " tip";
                 Debug.Log("Tip game object supplied; going to use tip of haptic cursor");
             }
             else
             {
-                debugCursor = hapticCursor;
+                debugObject = hapticCursor;
                 jointOrTip = "";
             }
         }
@@ -103,14 +103,27 @@ public class SimpleShapeContactMod : HapticClassScript {
 
 	void Update()
 	{
-		/***************************************************************/
-		//Haptic Rendering Loop
-		/***************************************************************/
-		PluginImport.RenderHaptic ();
+        //Update the Workspace as function of camera
+        for (int i = 0; i < workspaceUpdateValue.Length; i++)
+            workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
+
+        PluginImport.UpdateHapticWorkspace(ConverterClass.ConvertFloatArrayToIntPtr(workspaceUpdateValue));
+
+        /***************************************************************/
+        //Update cube workspace
+        /***************************************************************/
+        myGenericFunctionsClassScript.UpdateGraphicalWorkspace();
+
+        /***************************************************************/
+        //Haptic Rendering Loop
+        /***************************************************************/
+        PluginImport.RenderHaptic ();
 
         //Associate the cursor object with the haptic proxy value  
         myGenericFunctionsClassScript.GetProxyValues();
-		
+
+        //myGenericFunctionsClassScript.GetTouchedObject();
+
         if (!isStartPosCalibrated && Time.time >= 1f)
         {
             CalibrateReferencePos(true); //set start positions
@@ -131,7 +144,7 @@ public class SimpleShapeContactMod : HapticClassScript {
     {
         if (buttonPressed)
         {
-            referencePosCursor = debugCursor.transform.position;
+            referencePos = debugObject.transform.position;
             Debug.Log("Updated cursor's reference pos");
         }
     }
@@ -144,7 +157,7 @@ public class SimpleShapeContactMod : HapticClassScript {
     private void PrintCursorPositionDelta(int g)
     {
         Debug.LogFormat("Time: {0}, cursor{1} delta(pos[{2}], refPoint[{2}]): {3}", Time.time.ToString("F1"),
-            jointOrTip, g, /*Mathf.Abs*/(debugCursor.transform.position[g] - referencePosCursor[g]).ToString("F2"));
+            jointOrTip, g, /*Mathf.Abs*/(debugObject.transform.position[g] - referencePos[g]).ToString("F2"));
     }
 
     private void PrintCursorPositionDelta()
@@ -152,7 +165,7 @@ public class SimpleShapeContactMod : HapticClassScript {
         //TODO Calculate / calibrate scale factor
         //Also: Later, incorporate scaling factor in the workspace dimensions and don't apply it here anymore
         float scaleFactor = 0.69f;
-        float cursorDelta = Vector3.Distance(debugCursor.transform.position, referencePosCursor) / scaleFactor;
+        float cursorDelta = Vector3.Distance(debugObject.transform.position, referencePos)/* / scaleFactor*/;
         Debug.LogFormat("Time: {0}, cursor{1} delta(pos, refPoint): {2}", Time.time.ToString("F1"), jointOrTip, cursorDelta.ToString("F2"));
     }
 
