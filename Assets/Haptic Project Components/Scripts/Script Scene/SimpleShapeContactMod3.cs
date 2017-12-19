@@ -132,23 +132,43 @@ public class SimpleShapeContactMod3 : HapticClassScript {
 
         //Associate the cursor object with the haptic proxy value
 
-        if (Time.time >= 2f)
-        {
-            myGenericFunctionsClassScript.GetProxyValues();
-            if (!savedStartPositions)
+        //if (Time.time >= 2f)
+        //{
+            bool touched = PluginImport.GetHapticContact(1);
+            if (!touched)
             {
-                startPosCursorOptitrack = cursorOptitrack.transform.position;
-                //Assume the stylus is in the ink well
-                posInkwell = hapticCursor.transform.position;
-                savedStartPositions = true;
+                touchables[0].transform.position = hapticCursor.transform.position + unityTarget.position - cursorOptitrack.transform.position;
+                UpdateTargets();
             }
-            vCursorChange = hapticCursor.transform.position - posInkwell;
-            vOptitrackChange = cursorOptitrack.transform.position - startPosCursorOptitrack;
-            vOptitrackChange.Scale(new Vector3(15f, 15f, 15f));
-            touchables[0].transform.position = unityTarget.position + vCursorChange + vOptitrackChange;
-            UpdateTargets();
-        }
-        
+            else
+                Debug.Log("Touch!");
+
+            myGenericFunctionsClassScript.GetProxyValues();
+            //if (!savedStartPositions)
+            //{
+            //    startPosCursorOptitrack = cursorOptitrack.transform.position;
+            //    //Assume the stylus is in the ink well
+            //    posInkwell = hapticCursor.transform.position;
+            //    savedStartPositions = true;
+
+            //}
+            //vCursorChange = hapticCursor.transform.position - posInkwell;
+            //vOptitrackChange = cursorOptitrack.transform.position - startPosCursorOptitrack;
+
+            //Scale Optitrack position delta to try and make it more significant
+            //vOptitrackChange.Scale(new Vector3(10f, 10f, 10f));
+
+            //Subtract out haptic cursor delta by moving the touchable target as much
+            //as the haptic cursor has moved away from the ink well.
+            //We can't rely on the position from the haptic cursor (which is why we use Optitrack)
+            //touchables[0].transform.position = unityTarget.position + vCursorChange;
+
+            //Move the target
+            //touchables[0].transform.position += vOptitrackChange;
+
+            //if (myGenericFunctionsClassScript.Get)
+        //}
+
         //myGenericFunctionsClassScript.GetProxyValues2();
         //myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
 
@@ -172,8 +192,18 @@ public class SimpleShapeContactMod3 : HapticClassScript {
         //    touchables[i].transform.position = posTouchables[i] - vCursor;
         //}
 
-        myGenericFunctionsClassScript.SetHapticGeometry(touchables[0]);
+        myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
     }
+
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.cyan;
+    //    foreach (GameObject touchable in touchables)
+    //        Gizmos.DrawLine(posInkwell, touchable.transform.position);
+    //    Gizmos.DrawLine(posInkwell, hapticCursor.transform.position);
+    //    Gizmos.DrawLine(startPosCursorOptitrack, cursorOptitrack.transform.position);
+    //}
+
 
     void OnDisable()
 	{
