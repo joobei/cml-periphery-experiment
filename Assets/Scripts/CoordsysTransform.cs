@@ -7,7 +7,10 @@ public class CoordsysTransform : MonoBehaviour {
 
     public Transform testTransform;
 
-    //We are transforming from vTriangleFrom to vTriangleTo
+    /// <summary>
+    /// We are transforming from vTriangleFrom to vTriangleTo.
+    /// First element MUST be the corner of the triangle!
+    /// </summary>
     private Vector3[] vTriangleFrom = new Vector3[3];
     private Vector3[] vTriangleTo = new Vector3[3];
 
@@ -18,22 +21,33 @@ public class CoordsysTransform : MonoBehaviour {
     Quaternion rot1;
     Quaternion rot2;
 
-    private int id = 0;
+    /// <summary>
+    /// Number of saved position pairs.
+    /// Also serves as the index for saving
+    /// the next pair of positions.
+    /// </summary>
+    private int savedPosCnt = 0;
 
     public void SavePositionPair(Vector3 from, Vector3 to)
     {
-        if (id == 3)
+        if (savedPosCnt == 3)
             throw new Exception("Already saved 3 pairs of positions");
 
-        vTriangleFrom[id] = from;
-        vTriangleTo[id] = to;
-        id++;
+        vTriangleFrom[savedPosCnt] = from;
+        vTriangleTo[savedPosCnt] = to;
+        savedPosCnt++;
     }
 
     //Creates this transformation based on the saved positions
     //To be called after 3 pairs of positions have been saved
-    public void Create()
+    public void CreateTransformation()
     {
+        if (savedPosCnt != 3)
+        {
+            Debug.LogError("Error: 3 pairs of positions are required!");
+            return;
+        }
+            
         //Transform corner to corner
         cornerToCorner = vTriangleTo[0] - vTriangleFrom[0];
 
@@ -60,7 +74,7 @@ public class CoordsysTransform : MonoBehaviour {
     }
 
     //Applies the calibrated / calculated transformation to v
-    public Vector3 ApplyTo(Vector3 v)
+    public Vector3 ApplyTransformationTo(Vector3 v)
     {
         v += cornerToOrigin;
         v = rot1 * v;
