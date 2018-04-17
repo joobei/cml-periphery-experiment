@@ -6,6 +6,12 @@ using System.Runtime.InteropServices;
 
 public class SimpleShapeContactOptitrack : HapticClassScript {
 
+    public CoordsysTransform coordsysTransform;
+    public Transform optitrackCursor;
+    public Transform optitrackTarget;
+    public Transform hapticTarget;
+
+
 	//Generic Haptic Functions
 	private GenericFunctionsClass myGenericFunctionsClassScript;
 
@@ -13,9 +19,10 @@ public class SimpleShapeContactOptitrack : HapticClassScript {
     float[] workspaceUpdateValue = new float[1];
 
     [Tooltip("Interval in seconds for writing debug output")]
-    public float debugInterval;
+    public float buttonInterval;
 
     private float lastTime;
+    private byte savedPairs = 0;
 
     /*****************************************************************************/
 
@@ -104,15 +111,27 @@ public class SimpleShapeContactOptitrack : HapticClassScript {
         /***************************************************************/
         PluginImport.RenderHaptic ();
 
-        /***************************************************************/
-        //Update Haptic Object Transform
-        /***************************************************************/
-        myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
+        //Associate the cursor object with the haptic proxy value  
+        myGenericFunctionsClassScript.GetProxyValues();
 
-        //myGenericFunctionsClassScript.GetTouchedObject();
-        if (Time.time - lastTime > debugInterval)
+        if ( (PluginImport.GetButtonState(1, 1) || PluginImport.GetButtonState(1, 2)) 
+            && Time.time - lastTime > buttonInterval
+            && coordsysTransform.SavedPosCnt < 3)
         {
-            PrintCursorPosition();
+            coordsysTransform.SavePositionPair(optitrackCursor.position, hapticCursor.transform.position);
+            if (coordsysTransform.SavedPosCnt == 3)
+            {
+                coordsysTransform.CreateTransformation();
+                //Apply transformation to the touchable object (aka haptic target)
+                hapticTarget.position = coordsysTransform.ApplyTransformationTo(optitrackTarget.position);
+
+                //and update its position in haptic space
+                myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
+
+                //Also, scale unity target accordingly
+                optitrackTarget.localScale = Vector3.one / coordsysTransform.scaling;
+            }
+
             lastTime = Time.time;
         }
     }

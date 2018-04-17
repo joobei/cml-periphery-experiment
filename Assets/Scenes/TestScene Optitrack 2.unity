@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 375015660}
   - component: {fileID: 375015658}
   - component: {fileID: 375015661}
+  - component: {fileID: 375015662}
   m_Layer: 0
   m_Name: dummy
   m_TagString: Untagged
@@ -316,14 +317,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 375015657}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5dc793216251834692b1bc55c920df6, type: 3}
+  m_Script: {fileID: 11500000, guid: 72e896fe8b4024f4bbe72f7c8b58ddd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HapticMode: 
   ModeIndex: 0
   TouchableFace: 
-  device1Name: omni612-010
-  myHapticCamera: {fileID: 1430415914}
+  device1Name: 
+  myHapticCamera: {fileID: 1243085218}
   workSpaceObj: {fileID: 161658456}
   hapticCursor: {fileID: 1774286859}
   myWorkSpacePosition:
@@ -347,10 +348,11 @@ MonoBehaviour:
   - 0
   - 0
   maxPenetration: 0
-  cursorOptitrack: {fileID: 901586377}
-  touchables:
-  - {fileID: 1129909483}
-  unityTarget: {fileID: 793954661}
+  coordsysTransform: {fileID: 375015662}
+  optitrackCursor: {fileID: 901586382}
+  optitrackTarget: {fileID: 793954661}
+  hapticTarget: {fileID: 1129909488}
+  buttonInterval: 0.5
 --- !u!4 &375015659
 Transform:
   m_ObjectHideFlags: 0
@@ -401,6 +403,19 @@ MonoBehaviour:
   - 0
   - -1
   - 0
+--- !u!114 &375015662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 375015657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4d6a5cc7094a744b0c4a09158c6372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testTransform: {fileID: 0}
+  scaling: 0
 --- !u!1 &562730032
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,7 +613,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 793954657}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -606,7 +621,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: a17a9394b0f3098458e6f0d846f43042, type: 2}
+  - {fileID: 2100000, guid: 76193a78ad6e8914c8b9c9a2c02ad0b8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -640,11 +655,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 793954657}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.639, y: 0.44, z: -0.03}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.15118025, y: 0.175, z: 0.014}
+  m_LocalScale: {x: 0.23184119, y: 0.23184119, z: 0.23184119}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &901586377
 GameObject:
@@ -730,7 +745,7 @@ Transform:
   m_Children:
   - {fileID: 2128515054}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &940732210
 GameObject:
@@ -1027,7 +1042,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1129909483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.53, y: 1.13, z: 13.07}
+  m_LocalPosition: {x: -2.4, y: -0.57, z: -2.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1123,10 +1138,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3dce9c79dbdbdfc419560a29a65e66be, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1430415914 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 197132, guid: 3dce9c79dbdbdfc419560a29a65e66be, type: 2}
-  m_PrefabInternal: {fileID: 1430415913}
 --- !u!1 &1474886683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,11 +1370,11 @@ Transform:
   m_GameObject: {fileID: 1774286859}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.77, y: 1.1495342, z: 2.1624196}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 260410588}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1951369391
 GameObject:

@@ -26,25 +26,29 @@ public class CoordsysTransform : MonoBehaviour {
     /// Also serves as the index for saving
     /// the next pair of positions.
     /// </summary>
-    private int savedPosCnt = 0;
+    public int SavedPosCnt { get; private set; }
 
     public void SavePositionPair(Vector3 from, Vector3 to)
     {
-        if (savedPosCnt == 3)
-            throw new Exception("Already saved 3 pairs of positions");
+        if (SavedPosCnt >= 3)
+        {
+            Debug.LogError("Already saved 3 pairs of positions.");
+            return;
+        }
 
-        vTriangleFrom[savedPosCnt] = from;
-        vTriangleTo[savedPosCnt] = to;
-        savedPosCnt++;
+        vTriangleFrom[SavedPosCnt] = from;
+        vTriangleTo[SavedPosCnt] = to;
+        SavedPosCnt++;
+        Debug.Log("Saved position pair #" + SavedPosCnt);
     }
 
     //Creates this transformation based on the saved positions
     //To be called after 3 pairs of positions have been saved
     public void CreateTransformation()
     {
-        if (savedPosCnt != 3)
+        if (SavedPosCnt != 3)
         {
-            Debug.LogError("Error: 3 pairs of positions are required!");
+            Debug.LogError("Error: 3 pairs of positions are required.");
             return;
         }
             
@@ -71,6 +75,8 @@ public class CoordsysTransform : MonoBehaviour {
         //Calculate rotation from the second side in one triangle to the corresponding side in the other triangle
         rot2 = Quaternion.FromToRotation(vTriangleFrom[2] - vTriangleFrom[0],
             vTriangleTo[2] - vTriangleTo[0]);
+
+        Debug.Log("Created transformation based on the supplied position pairs.");
     }
 
     //Applies the calibrated / calculated transformation to v
