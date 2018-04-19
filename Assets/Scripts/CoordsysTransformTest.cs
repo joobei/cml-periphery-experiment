@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class CoordsysTransformTest : MonoBehaviour {
 
-    public CoordsysTransform coordTransform;
+    public CoordsysTransform coordsysTransform;
 
     public Transform[] triangleFrom;
     public Transform[] triangleTo;
+
+    public Transform[] test;
 
     // Use this for initialization
     void Start () {
 		for (int i=0; i<3; i++)
         {
-            coordTransform.SavePositionPair(triangleFrom[i].position, triangleTo[i].position);
+            coordsysTransform.SavePositionPair(triangleFrom[i].position, triangleTo[i].position);
         }
 
-        coordTransform.CreateTransformation();
+        coordsysTransform.CreateTransformation();
 
         foreach (Transform t in triangleFrom)
-            t.position = coordTransform.ApplyTransformationTo(t.position);
+            t.position = coordsysTransform.ApplyTransformationTo(t.position);
+
+        foreach (Transform t in test)
+        {
+            t.position = coordsysTransform.ApplyTransformationTo(t.position);
+        }
     }
 }
