@@ -16,8 +16,13 @@ public class ObjectVisibility : MonoBehaviour {
     public GameObject inkwellLeft;
     public GameObject inkwellRight;
 
-    // Update is called once per frame
-    void Update () {
+    void Update ()
+    {
+        ToggleVisibility();
+    }
+
+    public void ToggleVisibility()
+    {
         //Optitrack (Unity)
         if (Input.GetKey(KeyCode.O))
         {
@@ -74,5 +79,5 @@ public class ObjectVisibility : MonoBehaviour {
                 inkwellRight.SetActive(!inkwellRight.activeSelf);
             }
         }
-	}
+    }
 }
