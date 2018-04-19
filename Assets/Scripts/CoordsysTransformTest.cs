@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoordTransformTest : MonoBehaviour {
+public class CoordsysTransformTest : MonoBehaviour {
 
     public CoordsysTransform coordTransform;
 
