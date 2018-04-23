@@ -6,14 +6,10 @@ using System.Runtime.InteropServices;
 
 public class SimpleShapeContactOptitrack : HapticClassScript {
 
-    public CoordsysTransform coordsysTransform;
-    public Transform optitrackCursor;
-    public Transform optitrackTarget;
-    public Transform hapticTarget;
+    public ApplyTransformation tA;
 
-
-	//Generic Haptic Functions
-	private GenericFunctionsClass myGenericFunctionsClassScript;
+    //Generic Haptic Functions
+    private GenericFunctionsClass myGenericFunctionsClassScript;
 
     //Workspace Update Value
     float[] workspaceUpdateValue = new float[1];
@@ -22,7 +18,6 @@ public class SimpleShapeContactOptitrack : HapticClassScript {
     public float buttonInterval;
 
     private float lastTime;
-    private byte savedPairs = 0;
 
     /*****************************************************************************/
 
@@ -114,24 +109,11 @@ public class SimpleShapeContactOptitrack : HapticClassScript {
         //Associate the cursor object with the haptic proxy value  
         myGenericFunctionsClassScript.GetProxyValues();
 
-        if ( (PluginImport.GetButtonState(1, 1) || PluginImport.GetButtonState(1, 2)) 
-            && Time.time - lastTime > buttonInterval
-            && coordsysTransform.SavedPosCnt < 3)
+        if ((PluginImport.GetButtonState(1, 1) || PluginImport.GetButtonState(1, 2))
+            && Time.time - lastTime > buttonInterval)
         {
-            coordsysTransform.SavePositionPair(optitrackCursor.position, hapticCursor.transform.position);
-            if (coordsysTransform.SavedPosCnt == 3)
-            {
-                coordsysTransform.CreateTransformation();
-                //Apply transformation to the touchable object (aka haptic target)
-                hapticTarget.position = coordsysTransform.ApplyTransformationTo(optitrackTarget.position);
-
-                //and update its position in haptic space
-                myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
-
-                //Also, scale unity target accordingly
-                optitrackTarget.localScale = Vector3.one / coordsysTransform.scaling;
-            }
-
+            if (tA != null && tA.coordsysTransform.SavedPosCnt < 3)
+                tA.DoTransformation();
             lastTime = Time.time;
         }
     }

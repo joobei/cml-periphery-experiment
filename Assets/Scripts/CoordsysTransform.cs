@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoordsysTransform : MonoBehaviour {
+public class CoordsysTransform {
 
     /// <summary>
     /// We are transforming from vTriangleFrom to vTriangleTo.
@@ -97,13 +97,13 @@ public class CoordsysTransform : MonoBehaviour {
         return v;
     }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(Vector3.zero, vTriangleFrom[2] - vTriangleFrom[0]);
-        Gizmos.DrawLine(Vector3.zero, vTriangleTo[2] - vTriangleTo[0]);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(Vector3.zero, vTriangleFrom[1] - vTriangleFrom[0]);
-    }
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.DrawLine(Vector3.zero, vTriangleFrom[2] - vTriangleFrom[0]);
+    //    Gizmos.DrawLine(Vector3.zero, vTriangleTo[2] - vTriangleTo[0]);
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawLine(Vector3.zero, vTriangleFrom[1] - vTriangleFrom[0]);
+    //}
 
     //Taken from
     //https://math.stackexchange.com/questions/2548811/find-an-angle-to-rotate-a-vector-around-a-ray-so-that-the-vector-gets-as-close-a
