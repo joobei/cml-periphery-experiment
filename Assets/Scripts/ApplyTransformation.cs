@@ -17,7 +17,7 @@ public class ApplyTransformation : MonoBehaviour {
     //Workspace Update Value
     float[] workspaceUpdateValue = new float[1];
 
-    public CoordsysTransform coordsysTransform = new CoordsysTransform();
+    public CoordsysTransform coordsysTransform;
 
     /*****************************************************************************/
 

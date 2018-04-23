@@ -1262,6 +1262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1705873109}
   - component: {fileID: 1705873108}
+  - component: {fileID: 1705873110}
   m_Layer: 0
   m_Name: Transformation
   m_TagString: Untagged
@@ -1285,6 +1286,7 @@ MonoBehaviour:
   optitrackTarget: {fileID: 793954661}
   hapticCursor: {fileID: 1774286863}
   hapticTarget: {fileID: 1129909488}
+  coordsysTransform: {fileID: 1705873110}
 --- !u!4 &1705873109
 Transform:
   m_ObjectHideFlags: 0
@@ -1298,6 +1300,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1705873110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1705873107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4d6a5cc7094a744b0c4a09158c6372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaling: 0
 --- !u!1001 &1767585529
 Prefab:
   m_ObjectHideFlags: 0
