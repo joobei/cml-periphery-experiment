@@ -5,11 +5,19 @@ using System.Runtime.InteropServices;
 
 public class DualShapeContactMod2 : HapticClassScript {
 
+    public ApplyTransformation transLeft;
+    public ApplyTransformation transRight;
+
+    [Tooltip("Interval in seconds for writing debug output")]
+    public float buttonInterval;
+
     //Generic Haptic Functions
     private GenericFunctionsClass myGenericFunctionsClassScript;
 
     //Workspace Update Value
     float[] workspaceUpdateValue = new float[2];
+
+    private float lastTime;
 
     /*****************************************************************************/
 
@@ -117,18 +125,40 @@ public class DualShapeContactMod2 : HapticClassScript {
         //myGenericFunctionsClassScript.GetProxyValues();
         myGenericFunctionsClassScript.GetTwoProxyValues();
 
-        //myGenericFunctionsClassScript.GetTouchedObject();
+        //if (PluginImport.GetButtonState(1, 1))
+        //{
+        //    Debug.Log("1, 1");
+        //}
+        //else if (PluginImport.GetButtonState(1, 2))
+        //{
+        //    Debug.Log("1, 2");
+        //}
+        //else if (PluginImport.GetButtonState(2, 1))
+        //{
+        //    Debug.Log("2, 1");
+        //}
+        //else if (PluginImport.GetButtonState(2, 2))
+        //{
+        //    Debug.Log("2, 2");
+        //}
 
-        /*Debug.Log("Device 1: Button 1: " + PluginImport.GetButtonState(1, 1));
-        Debug.Log("Device 1: Button 2: " + PluginImport.GetButtonState(1, 2));
-        Debug.Log("Device 2: Button 1: " + PluginImport.GetButtonState(2, 1));
-        Debug.Log("Device 2: Button 2: " + PluginImport.GetButtonState(2, 2));*/
 
-        /*if(PluginImport.GetHapticContact(1))
-            Debug.Log("Device 1 touches: " + PluginImport.GetTouchedObjId(1) + " " + ConverterClass.ConvertIntPtrToByteToString(PluginImport.GetTouchedObjName(1)));
-        if (PluginImport.GetHapticContact(2))
-            Debug.Log("Device 2 touches: " + PluginImport.GetTouchedObjId(2) + " " + ConverterClass.ConvertIntPtrToByteToString(PluginImport.GetTouchedObjName(2)));*/
-
+        //Using only the buttons on one stylus because the other's don't
+        //seem to function. Creating and applying the transformation
+        //for the right Omni first, then for the left one.
+        if ((PluginImport.GetButtonState(1, 1) || PluginImport.GetButtonState(1, 2))
+            && Time.time - lastTime > buttonInterval)
+        {
+            if (transRight != null && transRight.coordsysTransform.SavedPosCnt < 3)
+            {
+                transRight.DoTransformation();
+            }
+            else if (transLeft != null && transLeft.coordsysTransform.SavedPosCnt < 3)
+            {
+                transLeft.DoTransformation();
+            }
+            lastTime = Time.time;
+        }
     }
 
     void OnDisable()
