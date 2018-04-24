@@ -117,10 +117,6 @@ public class DualShapeContactMod2 : HapticClassScript {
         /***************************************************************/
         PluginImport.RenderHaptic();
 
-        /***************************************************************/
-        //Update Haptic Object Transform
-        /***************************************************************/
-        myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
 
         //myGenericFunctionsClassScript.GetProxyValues();
         myGenericFunctionsClassScript.GetTwoProxyValues();
@@ -156,6 +152,13 @@ public class DualShapeContactMod2 : HapticClassScript {
             else if (transLeft != null && transLeft.coordsysTransform.SavedPosCnt < 3)
             {
                 transLeft.DoTransformation();
+                //Are we done with both transformations?
+                if (transLeft.coordsysTransform.SavedPosCnt == 3)
+                {
+                    //Then update positions of our haptic targets in haptic space
+                    myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
+                    transLeft.optitrackTarget.GetComponent<MeshRenderer>().enabled = true;
+                }
             }
             lastTime = Time.time;
         }
