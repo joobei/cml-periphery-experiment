@@ -32,7 +32,6 @@ public class ApplyTransformation : MonoBehaviour {
 
             //Also, scale unity target accordingly
             optitrackTarget.localScale = Vector3.one / coordsysTransform.scaling;
-            //optitrackTarget.GetComponent<MeshRenderer>().enabled = true;
         }
     }
 }

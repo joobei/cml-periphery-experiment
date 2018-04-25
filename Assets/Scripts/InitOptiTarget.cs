@@ -14,7 +14,6 @@ public class InitOptiTarget: MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return))
         {
             optiTarget.position = cursorOptiRight.position + (cursorOptiLeft.position - cursorOptiRight.position) / 2;
-            optiTarget.GetComponent<MeshRenderer>().enabled = false;
             Debug.Log("Placed Optitrack target between Optitrack cursors.");
         }
     }
