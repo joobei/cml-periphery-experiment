@@ -18,6 +18,7 @@ public class DualShapeContactMod2 : HapticClassScript {
     float[] workspaceUpdateValue = new float[2];
 
     private float lastTime;
+    private ScaleTarget scaleTarget;
 
     /*****************************************************************************/
 
@@ -90,6 +91,9 @@ public class DualShapeContactMod2 : HapticClassScript {
         //Launch the Haptic Event for all different haptic objects
         /***************************************************************/
         PluginImport.LaunchHapticEvent();
+
+        myGenericFunctionsClassScript.UpdateTwoGraphicalWorkspaces();
+        scaleTarget = transLeft.optitrackTarget.GetComponent<ScaleTarget>();
     }
 
 
@@ -102,15 +106,12 @@ public class DualShapeContactMod2 : HapticClassScript {
         //PluginImport.UpdateTwoWorkspace(myHapticCamera.transform.rotation.eulerAngles.y, myHapticCamera.transform.rotation.eulerAngles.y);
 
         //Update the Workspace as function of camera - Note that two different reference can be used to update each workspace
-        for (int i = 0; i < workspaceUpdateValue.Length; i++)
-            workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
-
-        PluginImport.UpdateHapticWorkspace(ConverterClass.ConvertFloatArrayToIntPtr(workspaceUpdateValue));
+        //UpdateHapticWorkspace();
 
         /***************************************************************/
         //Update 2 cubes workspaces
         /***************************************************************/
-        myGenericFunctionsClassScript.UpdateTwoGraphicalWorkspaces();
+        //myGenericFunctionsClassScript.UpdateTwoGraphicalWorkspaces();
 
         /***************************************************************/
         //Haptic Rendering Loop
@@ -158,10 +159,25 @@ public class DualShapeContactMod2 : HapticClassScript {
                     //Then update positions of our haptic targets in haptic space
                     myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
                     transLeft.optitrackTarget.GetComponent<MeshRenderer>().enabled = true;
+                    //and make the Optitrack target remember its initial scaling
+                    //(for use in scaleTarget.NextScale())
+                    scaleTarget.StoreInitialScaling();
                 }
+            }
+            else
+            {
+                scaleTarget.NextScale();
             }
             lastTime = Time.time;
         }
+    }
+
+    void UpdateHapticWorkspace()
+    {
+        for (int i = 0; i < workspaceUpdateValue.Length; i++)
+            workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
+
+        PluginImport.UpdateHapticWorkspace(ConverterClass.ConvertFloatArrayToIntPtr(workspaceUpdateValue));
     }
 
     void OnDisable()
