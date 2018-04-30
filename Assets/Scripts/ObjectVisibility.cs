@@ -26,6 +26,8 @@ public class ObjectVisibility : MonoBehaviour {
     public GameObject inkwellRight;
     private MeshRenderer iRMR;
 
+    public MeshRenderer workspaceLeft;
+    public MeshRenderer workspaceRight;
 
     void Start()
     {
@@ -56,14 +58,19 @@ public class ObjectVisibility : MonoBehaviour {
     //Toggle MeshRenderer component of haptic objects
     public void ToggleVisibilityHaptics()
     {
+        //First, make the states consistent
         hCRMR.enabled = hCLMR.enabled;
         hTLMR.enabled = hCLMR.enabled;
         hTRMR.enabled = hCLMR.enabled;
+        workspaceLeft.enabled = hCLMR.enabled;
+        workspaceRight.enabled = hCLMR.enabled;
 
         hCLMR.enabled = !hCLMR.enabled;
         hCRMR.enabled = !hCRMR.enabled;
         hTLMR.enabled = !hTLMR.enabled;
         hTRMR.enabled = !hTRMR.enabled;
+        workspaceLeft.enabled = !workspaceLeft.enabled;
+        workspaceRight.enabled = !workspaceRight.enabled;
         Debug.Log("Turned haptic visibility " + hTRMR.enabled);
     }
 
