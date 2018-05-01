@@ -38,22 +38,15 @@ public class DualShapeContactMod2 : HapticClassScript {
             myGenericFunctionsClassScript.SetTwoHapticWorkSpaces();
             myGenericFunctionsClassScript.GetTwoHapticWorkSpaces();
 
-            //Update two Workspaces as function of camera for each
-            //PluginImport.UpdateTwoWorkspaces(myHapticCamera.transform.rotation.eulerAngles.y, myHapticCamera.transform.rotation.eulerAngles.y);//To be Deprecated
-
             //Update the Workspace as function of camera - Note that two different references can be used to update each workspace
-            for (int i = 0; i < workspaceUpdateValue.Length; i++)
-                workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
+            UpdateHapticWorkspace();
 
-            PluginImport.UpdateHapticWorkspace(ConverterClass.ConvertFloatArrayToIntPtr(workspaceUpdateValue));
-            
+
             //Set Mode of Interaction
-            /*
-             * Mode = 0 Contact
+            /* Mode = 0 Contact
              * Mode = 1 Manipulation - So objects will have a mass when handling them
              * Mode = 2 Custom Effect - So the haptic device simulate vibration and tangential forces as power tools
-             * Mode = 3 Puncture - So the haptic device is a needle that puncture inside a geometry
-             */
+             * Mode = 3 Puncture - So the haptic device is a needle that puncture inside a geometry */
             PluginImport.SetMode(ModeIndex);
             //Show a text descrition of the mode
             myGenericFunctionsClassScript.IndicateMode();
@@ -174,8 +167,14 @@ public class DualShapeContactMod2 : HapticClassScript {
 
     void UpdateHapticWorkspace()
     {
-        for (int i = 0; i < workspaceUpdateValue.Length; i++)
-            workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
+        //for (int i = 0; i < workspaceUpdateValue.Length; i++)
+        //    workspaceUpdateValue[i] = myHapticCamera.transform.rotation.eulerAngles.y;
+
+        //workspaceUpdateValue[0] = 0f; //Right workspace: no rotation
+        //workspaceUpdateValue[1] = 180.0f; //Fix rotation of left workspace (and its cursor)
+
+        workspaceUpdateValue[0] = myHapticCamera.transform.rotation.eulerAngles.y;
+        workspaceUpdateValue[1] = mySecondHapticCamera.transform.rotation.eulerAngles.y;
 
         PluginImport.UpdateHapticWorkspace(ConverterClass.ConvertFloatArrayToIntPtr(workspaceUpdateValue));
     }
