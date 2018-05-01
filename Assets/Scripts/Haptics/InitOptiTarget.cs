@@ -21,4 +21,13 @@ public class InitOptiTarget: MonoBehaviour {
             initialized = true;
         }
     }
+
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.black;
+    //    Gizmos.DrawLine(cursorOptiLeft.position, cursorOptiRight.position);
+    //    Gizmos.color = Color.red;
+    //    Vector3 center = cursorOptiRight.position + (cursorOptiLeft.position - cursorOptiRight.position) / 2;
+    //    Gizmos.DrawLine(center, optiTarget.position);
+    //}
 }

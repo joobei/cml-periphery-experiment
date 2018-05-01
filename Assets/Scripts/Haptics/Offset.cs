@@ -1,9 +1,16 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Offset : MonoBehaviour {
 
+    //public enum Axis
+    //{
+    //    x = 0,
+    //    y = 1,
+    //    z = 2
+    //}
+    //public Axis axis;
     public bool negative;
 
 	// Use this for initialization
