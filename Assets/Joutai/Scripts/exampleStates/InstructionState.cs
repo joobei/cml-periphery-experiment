@@ -43,15 +43,10 @@ public class InstructionState : State
         {
             textPane.text = instructionTextArray[textIndex];
         }
+        InputManager.OnMouseButton += LocalAdvance;
+        HapticManager.OnStylusButton += LocalAdvance;
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            LocalAdvance();
-        }
-    }
 
     //advance to next text instruction
     private void LocalAdvance()
