@@ -18,8 +18,6 @@ public class CoordsysTransformTest : MonoBehaviour {
             coordsysTransform.SavePositionPair(triangleFrom[i].position, triangleTo[i].position);
         }
 
-        coordsysTransform.CreateTransformation();
-
         foreach (Transform t in triangleFrom)
             t.position = coordsysTransform.ApplyTransformationTo(t.position);
 
