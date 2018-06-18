@@ -38,11 +38,16 @@ public class CoordsysTransform : MonoBehaviour {
         vTriangleTo[SavedPosCnt] = to;
         SavedPosCnt++;
         Debug.Log("Saved position pair #" + SavedPosCnt);
+
+        if (SavedPosCnt == 3)
+        {
+            CreateTransformation();
+        }
     }
 
     //Creates this transformation based on the saved positions
     //To be called after 3 pairs of positions have been saved
-    public void CreateTransformation()
+    private void CreateTransformation()
     {
         if (SavedPosCnt != 3)
         {
@@ -86,6 +91,12 @@ public class CoordsysTransform : MonoBehaviour {
     //Applies the calibrated / calculated transformation to v
     public Vector3 ApplyTransformationTo(Vector3 v)
     {
+        if (SavedPosCnt != 3)
+        {
+            Debug.LogError("Error: 3 pairs of positions are required.");
+            return Vector3.zero;
+        }
+
         v += cornerToOrigin;
         v = rot1 * v;
         v = rot2 * v;
