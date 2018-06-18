@@ -8,6 +8,7 @@ TagManager:
   - Touchable
   - projectile
   - FxTemporaire
+  - permanent
   layers:
   - Default
   - TransparentFX
