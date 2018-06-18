@@ -100,8 +100,8 @@ public class CoordsysTransform : MonoBehaviour {
         v += cornerToOrigin;
         v = rot1 * v;
         v = rot2 * v;
-        
-        v *= scaling;
+
+        //v *= scaling;
         v -= cornerToOrigin;
         v += cornerToCorner;
 
