@@ -86,7 +86,7 @@ public class DualShapeContactMod2 : HapticClassScript {
         PluginImport.LaunchHapticEvent();
 
         myGenericFunctionsClassScript.UpdateTwoGraphicalWorkspaces();
-        scaleTarget = transLeft.optitrackTarget.GetComponent<ScaleTarget>();
+        scaleTarget = transLeft.targetFrom.GetComponent<ScaleTarget>();
     }
 
 
@@ -133,7 +133,7 @@ public class DualShapeContactMod2 : HapticClassScript {
         //}
 
 
-        //Using only the buttons on one stylus because the other's don't
+        //Using only one of the buttons on one stylus because the others don't
         //seem to function. Creating and applying the transformation
         //for the right Omni first, then for the left one.
         if ((PluginImport.GetButtonState(1, 1) || PluginImport.GetButtonState(1, 2))
@@ -151,7 +151,7 @@ public class DualShapeContactMod2 : HapticClassScript {
                 {
                     //Then update positions of our haptic targets in haptic space
                     myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
-                    transLeft.optitrackTarget.GetComponent<MeshRenderer>().enabled = true;
+                    transLeft.targetFrom.GetComponent<MeshRenderer>().enabled = true;
                     //and make the Optitrack target remember its initial scaling
                     //(for use in scaleTarget.NextScale())
                     scaleTarget.StoreInitialScaling();

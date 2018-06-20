@@ -9,13 +9,10 @@ public class ApplyTransformation : MonoBehaviour {
     //Generic Haptic Functions
     public GenericFunctionsClass myGenericFunctionsClassScript;
 
-    public Transform optitrackCursor;
-    public Transform optitrackTarget;
-    public Transform hapticCursor;
-    public Transform hapticTarget;
-
-    //Workspace Update Value
-    float[] workspaceUpdateValue = new float[1];
+    public Transform cursorFrom;
+    public Transform targetFrom;
+    public Transform cursorTo;
+    public Transform targetTo;
 
     public CoordsysTransform coordsysTransform;
 
@@ -23,15 +20,15 @@ public class ApplyTransformation : MonoBehaviour {
 
     internal void DoTransformation()
     {
-        coordsysTransform.SavePositionPair(optitrackCursor.position, hapticCursor.position);
+        coordsysTransform.SavePositionPair(cursorFrom.position, cursorTo.position);
         if (coordsysTransform.SavedPosCnt == 3)
         {
-            coordsysTransform.CreateTransformation();
+            //coordsysTransform.CreateTransformation();
             //Apply transformation to the touchable object (aka haptic target)
-            hapticTarget.position = coordsysTransform.ApplyTransformationTo(optitrackTarget.position);
+            targetTo.position = coordsysTransform.ApplyTransformationTo(targetFrom.position);
 
             //Also, scale unity target accordingly
-            optitrackTarget.localScale = Vector3.one / coordsysTransform.scaling;
+            targetFrom.localScale = targetTo.localScale / coordsysTransform.scaling;
         }
     }
 }

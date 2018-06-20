@@ -13,9 +13,11 @@ public class ScaleTarget : MonoBehaviour {
     }
     [Space(20)]
     [Header("Scaling")]
-    //[Range(1,5)]
+    public float largest;
+    public float smallest;
+
     [Tooltip("How many different scalings? ODD values only")]
-    public Scalings noOfScalings = Scalings.five;
+    public Scalings noOfScalings;
     [Tooltip("The scale factor")]
     public float interval = 0.05f;
 
@@ -24,6 +26,7 @@ public class ScaleTarget : MonoBehaviour {
 
     private GenericFunctionsClass myGenericFunctionsClassScript;
     //Placeholder value; will hold the initial, calibrated scaling
+    //after call to StoreInitialScaling()
     private Vector3 vInitial = Vector3.forward;
 
     void Start()
@@ -79,9 +82,9 @@ public class ScaleTarget : MonoBehaviour {
     {
         foreach (GameObject gO in transformations)
         {
-            float hapticFactor = gO.GetComponent<CoordsysTransform>().scaling;
+            float hapticScaleFactor = gO.GetComponent<CoordsysTransform>().scaling;
             ApplyTransformation aT = gO.GetComponent<ApplyTransformation>();
-            aT.hapticTarget.localScale = transform.localScale * hapticFactor;
+            aT.targetTo.localScale = transform.localScale * hapticScaleFactor;
         }
         myGenericFunctionsClassScript.UpdateHapticObjectMatrixTransform();
     }
