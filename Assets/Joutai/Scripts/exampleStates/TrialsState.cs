@@ -8,12 +8,16 @@ using Joutai;
 public class TrialsState : State
 {
     public GameObject decisionCanvas;
+    [Tooltip("Time the participant has for feeling size of sphere before s/he has to decide")]
+    public float touchTimer;
+    private float touchTimerPrivate;
 
     public override void OnEnable()
     {
         base.OnEnable();
         HapticManager.OnStylusButton += AdvanceTrial;
         Interact.OnUIButton += Choose;
+        touchTimerPrivate = touchTimer;
     }
 
     //Advance to next trial
@@ -35,10 +39,26 @@ public class TrialsState : State
         //TODO: Write decision to log file
 
         HapticManager.OnStylusButton += AdvanceTrial;
+        //Set initial value again and thereby start timer again
+        touchTimerPrivate = touchTimer;
     }
 
     private void OnDisable()
     {
         HapticManager.OnStylusButton -= AdvanceTrial;
+    }
+
+    private void Update()
+    {
+        if (touchTimerPrivate == 0)
+            return;
+
+        touchTimerPrivate -= Time.deltaTime;
+
+        if (touchTimerPrivate <= 0)
+        {
+            touchTimerPrivate = 0;
+            AdvanceTrial();
+        }
     }
 }
