@@ -7,7 +7,7 @@ using Joutai;
 
 public class CountdownState : InstructionState
 {
-    float countDownTimer = 3.0f;
+    public float countDownTimer;
 
     public override void OnEnable()
     {
