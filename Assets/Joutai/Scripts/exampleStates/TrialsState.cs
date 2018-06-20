@@ -15,37 +15,40 @@ public class TrialsState : State
     public override void OnEnable()
     {
         base.OnEnable();
-        HapticManager.OnStylusButton += AdvanceTrial;
-        Interact.OnUIButton += Choose;
+        HapticManager.OnStylusButton += DisplayChoiceUI;
+        ButtonInteract.OnUIButton += Choose;
         touchTimerPrivate = touchTimer;
     }
 
-    //Advance to next trial
-    private void AdvanceTrial()
+    private void DisplayChoiceUI()
     {
-        HapticManager.OnStylusButton -= AdvanceTrial;
-        //Deactivate cursor and target and display UI
+        HapticManager.OnStylusButton -= DisplayChoiceUI;
+        //Stop sphere callback
+        HapticManager.disableSphere();
+        //Deactivate cursor and target
         SetActiveNeededObjects(false); 
-        //Display decision UI
-        decisionCanvas.SetActive(true);
+        decisionCanvas.SetActive(true); //Display UI
     }
 
-    private void Choose(Interact.Decision decision)
+    private void Choose(ButtonInteract.Decision decision)
     {
         //Hide UI and activate cursor and target
         decisionCanvas.SetActive(false);
         SetActiveNeededObjects(true);
 
+        //Reactivate sphere callback
+        HapticManager.enableSphere();
+
         //TODO: Write decision to log file
 
-        HapticManager.OnStylusButton += AdvanceTrial;
+        HapticManager.OnStylusButton += DisplayChoiceUI;
         //Set initial value again and thereby start timer again
         touchTimerPrivate = touchTimer;
     }
 
     private void OnDisable()
     {
-        HapticManager.OnStylusButton -= AdvanceTrial;
+        HapticManager.OnStylusButton -= DisplayChoiceUI;
     }
 
     private void Update()
@@ -58,7 +61,7 @@ public class TrialsState : State
         if (touchTimerPrivate <= 0)
         {
             touchTimerPrivate = 0;
-            AdvanceTrial();
+            DisplayChoiceUI();
         }
     }
 }
