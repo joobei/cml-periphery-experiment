@@ -27,6 +27,7 @@ public class OmniToUICursor : MonoBehaviour
         Vector3 newPos = OmniCursor.localPosition;
         newPos *= movementSpeed;
         newPos -= OmniInitialPos;
+        newPos.x = -newPos.z;
         newPos.z = 0;
         cursor.localPosition = newPos;
     }
