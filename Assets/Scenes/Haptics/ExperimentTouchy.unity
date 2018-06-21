@@ -196,7 +196,7 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 121174165}
-  m_LocalRotation: {x: 0.23557171, y: 0.6667128, z: -0.23557171, w: 0.6667128}
+  m_LocalRotation: {x: 0.34604567, y: 0.6166461, z: -0.34604567, w: 0.6166461}
   m_LocalPosition: {x: 0, y: 0, z: 4.2}
   m_LocalScale: {x: 0.31040332, y: 0.31040338, z: 0.31040332}
   m_Children:
@@ -205,10 +205,10 @@ RectTransform:
   - {fileID: 1010611700}
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 38.92, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 58.6, y: 90, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 112.6, y: -79.55}
+  m_AnchoredPosition: {x: 80.7, y: -121.3}
   m_SizeDelta: {x: 785, y: 372}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &121174170
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursor: {fileID: 1981875001}
   OmniCursor: {fileID: 1222805307}
-  movementSpeed: 1000
+  movementSpeed: 1500
 --- !u!1 &217450652
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,7 +436,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 245889437}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -856,7 +856,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 350326993}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1289,7 +1289,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 702938861}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1541,7 +1541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &864369807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1713,8 +1713,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   use: 1
   neededObjects:
-  - {fileID: 1634587951}
-  - {fileID: 245889437}
+  - {fileID: 1222805303}
+  - {fileID: 350326993}
   decisionCanvas: {fileID: 121174165}
   touchTimer: 99
 --- !u!1 &940732210
@@ -2056,6 +2056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1002904684}
   - component: {fileID: 1002904683}
+  - component: {fileID: 1002904685}
   m_Layer: 0
   m_Name: HapticManager
   m_TagString: permanent
@@ -2078,6 +2079,7 @@ MonoBehaviour:
   targetSphere: {fileID: 350326993}
   radius: 30
   stylusButtonInterval: 0.5
+  calibration: {fileID: 1002904685}
 --- !u!4 &1002904684
 Transform:
   m_ObjectHideFlags: 0
@@ -2091,6 +2093,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1002904685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1002904682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f30caa5d824b33c4395bbbc5401db2a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  optiCursor: {fileID: 702938866}
+  hapticTarget: {fileID: 350326997}
+  optiPosZero: {x: 0, y: 0, z: 0}
 --- !u!1 &1003260565
 GameObject:
   m_ObjectHideFlags: 0
@@ -2515,7 +2531,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1222805303}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2941,7 +2957,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1472578620
 MonoBehaviour:
   m_ObjectHideFlags: 0
