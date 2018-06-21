@@ -84,7 +84,7 @@ public class CoordsysTransform : MonoBehaviour {
 
         //rot2 = Quaternion.AngleAxis(AngleSigned(fromAxisAC, toAxisAC, fromAxisAB), fromAxisAB);
         rot2 = Quaternion.AngleAxis(AngleSigned(fromAxisAC, toAxisAC, fromAxisAB), fromAxisAB);
-        Debug.Log("angle for rot 2: "+ AngleSigned(fromAxisAC, toAxisAC, fromAxisAB));
+        //Debug.Log("angle for rot 2: "+ AngleSigned(fromAxisAC, toAxisAC, fromAxisAB));
         Debug.Log("Created transformation based on the supplied position pairs.");
     }
 
