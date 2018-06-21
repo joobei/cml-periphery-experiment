@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UICursor : MonoBehaviour {
+public class OmniToUICursor : MonoBehaviour
+{
 
     public Transform cursor;
-    public Transform optitrackCursor;
+    public Transform OmniCursor;
     public float movementSpeed;
 
-    private Vector3 optitrackInitialPos;
+    private Vector3 OmniInitialPos;
 
 
     private void OnEnable()
     {
-        optitrackInitialPos = optitrackCursor.localPosition * movementSpeed;
+        OmniInitialPos = OmniCursor.localPosition * movementSpeed;
     }
 
-    void Update ()
+    void Update()
     {
         UpdatePosition();
     }
 
     private void UpdatePosition()
     {
-        Vector3 newPos = optitrackCursor.localPosition;
+        Vector3 newPos = OmniCursor.localPosition;
         newPos *= movementSpeed;
-        newPos -= optitrackInitialPos;
-        newPos.x = -newPos.z;
+        newPos -= OmniInitialPos;
         newPos.z = 0;
         cursor.localPosition = newPos;
     }
