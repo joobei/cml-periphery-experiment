@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 public class TransformationManager: MonoBehaviour {
 
     public CoordsysTransform coordsysTransform;
-    //Generic Haptic Functions
-    public GenericFunctionsClass myGenericFunctionsClassScript;
     public GameObject experimentController;
     public GameObject transformedCursor;
 

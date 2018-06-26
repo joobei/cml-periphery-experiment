@@ -24,7 +24,6 @@ public class ScaleTarget : MonoBehaviour {
     private int scalings;
     private int level;
 
-    private GenericFunctionsClass myGenericFunctionsClassScript;
     //Placeholder value; will hold the initial, calibrated scaling
     //after call to StoreInitialScaling()
     private Vector3 vInitial = Vector3.forward;
@@ -34,7 +33,6 @@ public class ScaleTarget : MonoBehaviour {
         scalings = (int)noOfScalings;
         if ((scalings % 2) == 0) //Only allow odd values
             noOfScalings++;
-        myGenericFunctionsClassScript = transformations[0].GetComponent<ApplyTransformation>().myGenericFunctionsClassScript;
         level = (scalings - 1) / 2; //Start "in the middle"
     }
 

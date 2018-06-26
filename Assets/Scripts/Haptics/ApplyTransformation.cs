@@ -6,9 +6,6 @@ using System.Runtime.InteropServices;
 
 public class ApplyTransformation : MonoBehaviour {
 
-    //Generic Haptic Functions
-    public GenericFunctionsClass myGenericFunctionsClassScript;
-
     public Transform cursorFrom;
     public Transform targetFrom;
     public Transform cursorTo;
